@@ -9,7 +9,7 @@ package model;
  *
  * @author KrzysieK
  */
-public class Ksiazka {
+public class Book {
     private int id;
     private String tytul;
     private String autor;
@@ -33,7 +33,7 @@ public class Ksiazka {
         this.autor = autor;
     }
  
-    public Ksiazka(int id, String tytul, String autor) {
+    public Book(int id, String tytul, String autor) {
         this.id = id;
         this.tytul = tytul;
         this.autor = autor;

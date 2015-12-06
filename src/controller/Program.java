@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jdbcprojekt;
+package controller;
 
 /**
  *
@@ -12,15 +12,15 @@ package jdbcprojekt;
 
 import java.util.List;
  
-import model.Czytelnik;
-import model.Ksiazka;
-import biblioteka.Biblioteka;
+import model.User;
+import model.Book;
+import controller.DataBaseController;
 import java.sql.SQLException;
 
-public class JDBCProjekt {
+public class Program {
 
     public static void main(String[] args) {
-        Biblioteka b = new Biblioteka();
+        DataBaseController b = new DataBaseController();
         b.insertCzytelnik("Karol", "Maciaszek", "99");
         b.insertCzytelnik("Piotr", "Wojtecki", "89273849128");
         b.insertCzytelnik("Abdul", "Dabdul", "");

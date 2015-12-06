@@ -1,5 +1,5 @@
 
-package biblioteka;
+package controller;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,10 +10,10 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
  
-import model.Czytelnik;
-import model.Ksiazka;
+import model.User;
+import model.Book;
  
-public class Biblioteka {
+public class DataBaseController {
  
     public static final String DRIVER = "org.sqlite.JDBC";
     public static final String DB_URL = "jdbc:sqlite:biblioteka.db";
@@ -21,9 +21,9 @@ public class Biblioteka {
     private Connection conn;
     private Statement stat;
  
-    public Biblioteka() {
+    public DataBaseController() {
         try {
-            Class.forName(Biblioteka.DRIVER);
+            Class.forName(DataBaseController.DRIVER);
         } catch (ClassNotFoundException e) {
             System.err.println("Brak sterownika JDBC");
         }
@@ -107,7 +107,7 @@ public class Biblioteka {
     }
  
     public void selectAllCzytelnicy() {
-        List<Czytelnik> czytelnicy = new LinkedList<>();
+        List<User> czytelnicy = new LinkedList<>();
         try {
             ResultSet result = stat.executeQuery("SELECT * FROM czytelnicy");
             int id;
@@ -117,19 +117,19 @@ public class Biblioteka {
                 imie = result.getString("imie");
                 nazwisko = result.getString("nazwisko");
                 pesel = result.getString("pesel");
-                czytelnicy.add(new Czytelnik(id, imie, nazwisko, pesel));
+                czytelnicy.add(new User(id, imie, nazwisko, pesel));
             }
         } catch (SQLException e) {
            System.err.println("Blad przy wybieraniu Czytelników");
         }
         
         System.out.println("Lista wszystkich czytelników: ");
-        for(Czytelnik c: czytelnicy)
+        for(User c: czytelnicy)
             System.out.println(c); 
     }
  
     public void selectAllKsiazki() {
-        List<Ksiazka> ksiazki = new LinkedList<>();
+        List<Book> ksiazki = new LinkedList<>();
         try {
             ResultSet result = stat.executeQuery("SELECT * FROM ksiazki");
             int id;
@@ -138,18 +138,18 @@ public class Biblioteka {
                 id = result.getInt("id_ksiazki");
                 tytul = result.getString("tytul");
                 autor = result.getString("autor");
-                ksiazki.add(new Ksiazka(id, tytul, autor));
+                ksiazki.add(new Book(id, tytul, autor));
             }
         } catch (SQLException e) {
             System.err.println("Blad przy wybieraniu Książek");
         }
         System.out.println("Lista wszystkich książek:");
-        for(Ksiazka k: ksiazki)
+        for(Book k: ksiazki)
             System.out.println(k);
     }
     
     public void selectInKsiazki(String pole, String wartosc) {
-        List<Ksiazka> ksiazki = new LinkedList<>();
+        List<Book> ksiazki = new LinkedList<>();
         try {
             ResultSet result = stat.executeQuery("SELECT * FROM ksiazki WHERE "+ pole + "='" + wartosc + "';");
             int id;
@@ -158,13 +158,13 @@ public class Biblioteka {
                 id = result.getInt("id_ksiazki");
                 tytul = result.getString("tytul");
                 autor = result.getString("autor");
-                ksiazki.add(new Ksiazka(id, tytul, autor));
+                ksiazki.add(new Book(id, tytul, autor));
             }
         } catch (SQLException e) {
             System.err.println("Blad przy wybieraniu Książek");
         }
         System.out.println("Lista wszystkich książek:");
-        for(Ksiazka k: ksiazki)
+        for(Book k: ksiazki)
             System.out.println(k);
     }
     
