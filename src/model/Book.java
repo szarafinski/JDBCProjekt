@@ -1,46 +1,87 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package model;
+
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  *
- * @author KrzysieK
+ * @author KrzysieK Sz.
  */
 public class Book {
-    private int id;
-    private String tytul;
-    private String autor;
- 
-    public int getId() {
-        return id;
+
+    private final SimpleStringProperty bookTitle;
+    private final SimpleStringProperty bookAuthor;
+    private final SimpleStringProperty bookISBN;
+    private final SimpleIntegerProperty bookID;
+    private final SimpleStringProperty bookWydawnictwo;
+    private final SimpleStringProperty bookRokWydania;
+
+    public Book(String bookTitle, String bookAuthor, String bookISBN, int bookID, String bookWydawnictwo, String bookRokWydania) {
+        this.bookTitle = new SimpleStringProperty(bookTitle);
+        this.bookAuthor = new SimpleStringProperty(bookAuthor);
+        this.bookISBN = new SimpleStringProperty(bookISBN);
+        this.bookID = new SimpleIntegerProperty(bookID);
+        this.bookWydawnictwo = new SimpleStringProperty(bookWydawnictwo);
+        this.bookRokWydania = new SimpleStringProperty(bookRokWydania);
     }
-    public void setId(int id) {
-        this.id = id;
+    public Book(String bookTitle, String bookAuthor, String bookISBN, String bookWydawnictwo, String bookRokWydania) {
+        this.bookTitle = new SimpleStringProperty(bookTitle);
+        this.bookAuthor = new SimpleStringProperty(bookAuthor);
+        this.bookISBN = new SimpleStringProperty(bookISBN);
+        this.bookID = new SimpleIntegerProperty();
+        this.bookWydawnictwo = new SimpleStringProperty(bookWydawnictwo);
+        this.bookRokWydania = new SimpleStringProperty(bookRokWydania);
     }
-    public String getTytul() {
-        return tytul;
+
+    public String getBookTitle() {
+        return bookTitle.get();
     }
-    public void setTytul(String tytul) {
-        this.tytul = tytul;
+
+    public String getBookAuthor() {
+        return bookAuthor.get();
     }
-    public String getAutor() {
-        return autor;
+
+    public String getBookISBN() {
+        return bookISBN.get();
     }
-    public void setAutor(String autor) {
-        this.autor = autor;
+
+    public int getBookID() {
+        return bookID.get();
     }
- 
-    public Book(int id, String tytul, String autor) {
-        this.id = id;
-        this.tytul = tytul;
-        this.autor = autor;
+
+    public String getBookWydawnictwo() {
+        return bookWydawnictwo.get();
     }
- 
+
+    public String getBookRokWydania() {
+        return bookRokWydania.get();
+    }
+      public void setBookTitle(String s) {
+         bookTitle.set(s);
+    }
+
+    public void setBookAuthor(String s) {
+         bookAuthor.set(s);
+    }
+
+    public void setBookISBN(String i) {
+         bookISBN.set(i);
+    }
+
+    public void setBookID(int i) {
+         bookID.set(i);
+    }
+
+    public void setBookWydawnictwo(String i) {
+         bookWydawnictwo.set(i);
+    }
+
+    public void setBookRokWydania(String i) {
+         bookRokWydania.set(i);
+    }
     @Override
-    public String toString() {
-        return "["+id+"] - "+tytul+" - "+autor;
+    public String toString(){
+        return "ID: ["+ bookID + "]" + "Tytuł: " + bookTitle + " wydana w: " + bookRokWydania;
     }
 }

@@ -1,4 +1,3 @@
-
 package controller;
 
 import java.sql.Connection;
@@ -9,197 +8,202 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
- 
 import model.User;
 import model.Book;
- 
+
+/**
+ *
+ * @author KrzysieK Sz.
+ */
 public class DataBaseController {
- 
+
     public static final String DRIVER = "org.sqlite.JDBC";
-    public static final String DB_URL = "jdbc:sqlite:biblioteka.db";
- 
+    public static final String DB_URL = "jdbc:sqlite:baza.db";
+
     private Connection conn;
     private Statement stat;
- 
+    private PreparedStatement prepStmt;
+    ResultSet result;
+
     public DataBaseController() {
         try {
             Class.forName(DataBaseController.DRIVER);
         } catch (ClassNotFoundException e) {
             System.err.println("Brak sterownika JDBC");
         }
- 
+
         try {
             conn = DriverManager.getConnection(DB_URL);
             stat = conn.createStatement();
         } catch (SQLException e) {
             System.err.println("Problem z otwarciem polaczenia");
         }
- 
-        createTables();
+
     }
- 
-    private void createTables()  {
-        String createCzytelnicy = "CREATE TABLE IF NOT EXISTS "
-                + "czytelnicy "
-                + "(id_czytelnika INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "imie varchar(255), "
-                + "nazwisko varchar(255), "
-                + "pesel int)";
-        String createKsiazki = "CREATE TABLE IF NOT EXISTS "
-                + "ksiazki "
-                + "(id_ksiazki INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "tytul varchar(255), "
-                + "autor varchar(255))";
-        String createWypozyczenia = "CREATE TABLE IF NOT EXISTS "
-                + "wypozyczenia "
-                + "(id_wypozycz INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "id_czytelnika int, "
-                + "id_ksiazki int)";
+
+//    private void createTables() {
+//        String createCzytelnicy = "CREATE TABLE IF NOT EXISTS "
+//                + "czytelnicy "
+//                + "(id_czytelnika INTEGER PRIMARY KEY AUTOINCREMENT, "
+//                + "imie varchar(255), "
+//                + "nazwisko varchar(255), "
+//                + "pesel int)";
+//        String createKsiazki = "CREATE TABLE IF NOT EXISTS "
+//                + "ksiazki "
+//                + "(id_ksiazki INTEGER PRIMARY KEY AUTOINCREMENT, "
+//                + "tytul varchar(255), "
+//                + "autor varchar(255))";
+//        String createWypozyczenia = "CREATE TABLE IF NOT EXISTS "
+//                + "wypozyczenia "
+//                + "(id_wypozycz INTEGER PRIMARY KEY AUTOINCREMENT, "
+//                + "id_czytelnika int, "
+//                + "id_ksiazki int)";
+//        try {
+//            stat.execute(createCzytelnicy);
+//            stat.execute(createKsiazki);
+//            stat.execute(createWypozyczenia);
+//        } catch (SQLException e) {
+//            System.err.println("Blad przy tworzeniu tabeli");
+//
+//        }
+//    }
+    public void insertCzytelnik(User czytelnik) {
         try {
-            stat.execute(createCzytelnicy);
-            stat.execute(createKsiazki);
-            stat.execute(createWypozyczenia);
-        } catch (SQLException e) {
-            System.err.println("Blad przy tworzeniu tabeli");
-        
-        }
-    }
- 
-    public void insertCzytelnik(String imie, String nazwisko, String pesel) {
-        try {
-            PreparedStatement prepStmt = conn.prepareStatement(
-                    "insert into czytelnicy values (NULL, ?, ?, ?);");
-            prepStmt.setString(1, imie);
-            prepStmt.setString(2, nazwisko);
-            prepStmt.setString(3, pesel);
+            prepStmt = conn.prepareStatement(
+                    "INSERT INTO czytelnicy VALUES (NULL, ?, ?, ?, ?, ?);");
+            prepStmt.setString(1, czytelnik.getImie());
+            prepStmt.setString(2, czytelnik.getNazwisko());
+            prepStmt.setString(3, czytelnik.getPesel());
+            prepStmt.setString(4, czytelnik.getMiasto());
+            prepStmt.setString(5, czytelnik.getUlica());
             prepStmt.execute();
         } catch (SQLException e) {
-            System.err.println("Blad przy wstawianiu czytelnika");
+            System.err.println("Błąd przy wstawianiu czytelnika");
         }
-      
+
     }
- 
-    public void insertKsiazka(String tytul, String autor) {
+
+    public void insertKsiazka(Book ksiazka) {
         try {
-            PreparedStatement prepStmt = conn.prepareStatement(
-                    "insert into ksiazki values (NULL, ?, ?);");
-            prepStmt.setString(1, tytul);
-            prepStmt.setString(2, autor);
+            prepStmt = conn.prepareStatement(
+                    "INSERT INTO ksiazki VALUES (NULL, ?, ?, ?, ?, ?);");
+            prepStmt.setString(1, ksiazka.getBookTitle());
+            prepStmt.setString(2, ksiazka.getBookAuthor());
+            prepStmt.setString(3, ksiazka.getBookWydawnictwo());
+            prepStmt.setString(4, ksiazka.getBookISBN());
+            prepStmt.setString(5, ksiazka.getBookRokWydania());
             prepStmt.addBatch();
             prepStmt.executeBatch();
         } catch (SQLException e) {
-            System.err.println("Blad przy wypozyczaniu");
+            System.err.println("Blad przy wstawianiu książki");
         }
     }
- 
-    public void insertWypozycz(int idCzytelnik, int idKsiazka) {
-        try {
-            PreparedStatement prepStmt = conn.prepareStatement(
-                    "insert into wypozyczenia values (NULL, ?, ?);");
-            prepStmt.setInt(1, idCzytelnik);
-            prepStmt.setInt(2, idKsiazka);
-            prepStmt.execute();
-        } catch (SQLException e) {
-            System.err.println("Blad przy wypozyczaniu");
-          
-        }
-        
-    }
- 
-    public void selectAllCzytelnicy() {
+
+//    public void insertWypozycz(int idCzytelnik, int idKsiazka) {
+//        try {
+//            prepStmt = conn.prepareStatement(
+//                    "insert into wypozyczenia values (NULL, ?, ?);");
+//            prepStmt.setInt(1, idCzytelnik);
+//            prepStmt.setInt(2, idKsiazka);
+//            prepStmt.execute();
+//        } catch (SQLException e) {
+//            System.err.println("Blad przy wypozyczaniu");
+//
+//        }
+//
+//    }
+    public List<User> selectCzytelnicy(String command) {
         List<User> czytelnicy = new LinkedList<>();
         try {
-            ResultSet result = stat.executeQuery("SELECT * FROM czytelnicy");
+            result = stat.executeQuery(command);
             int id;
-            String imie, nazwisko, pesel;
-            while(result.next()) {
+            String imie, nazwisko, pesel, miasto, ulica;
+            while (result.next()) {
                 id = result.getInt("id_czytelnika");
                 imie = result.getString("imie");
                 nazwisko = result.getString("nazwisko");
                 pesel = result.getString("pesel");
-                czytelnicy.add(new User(id, imie, nazwisko, pesel));
+                miasto = result.getString("miasto");
+                ulica = result.getString("ulica");
+                czytelnicy.add(new User(id, imie, nazwisko, pesel, miasto, ulica));
             }
         } catch (SQLException e) {
-           System.err.println("Blad przy wybieraniu Czytelników");
+            System.err.println("Blad przy wybieraniu Czytelników");
         }
-        
-        System.out.println("Lista wszystkich czytelników: ");
-        for(User c: czytelnicy)
-            System.out.println(c); 
+        return czytelnicy;
     }
- 
-    public void selectAllKsiazki() {
+
+    public List<Book> selectKsiazki(String command) {
         List<Book> ksiazki = new LinkedList<>();
         try {
-            ResultSet result = stat.executeQuery("SELECT * FROM ksiazki");
+            result = stat.executeQuery(command);
             int id;
-            String tytul, autor;
-            while(result.next()) {
+            String tytul, autor, wydawnictwo, isbn, rok_wydania;
+            while (result.next()) {
                 id = result.getInt("id_ksiazki");
                 tytul = result.getString("tytul");
                 autor = result.getString("autor");
-                ksiazki.add(new Book(id, tytul, autor));
+                isbn = result.getString("isbn");
+                rok_wydania = result.getString("rok_wydania");
+                wydawnictwo = result.getString("wydawnictwo");
+                ksiazki.add(new Book(tytul, autor, isbn, id, wydawnictwo, rok_wydania));
             }
         } catch (SQLException e) {
             System.err.println("Blad przy wybieraniu Książek");
         }
-        System.out.println("Lista wszystkich książek:");
-        for(Book k: ksiazki)
-            System.out.println(k);
+        return ksiazki;
+
     }
+
+    /* select wypożyczenia:
     
-    public void selectInKsiazki(String pole, String wartosc) {
-        List<Book> ksiazki = new LinkedList<>();
-        try {
-            ResultSet result = stat.executeQuery("SELECT * FROM ksiazki WHERE "+ pole + "='" + wartosc + "';");
-            int id;
-            String tytul, autor;
-            while(result.next()) {
-                id = result.getInt("id_ksiazki");
-                tytul = result.getString("tytul");
-                autor = result.getString("autor");
-                ksiazki.add(new Book(id, tytul, autor));
-            }
-        } catch (SQLException e) {
-            System.err.println("Blad przy wybieraniu Książek");
-        }
-        System.out.println("Lista wszystkich książek:");
-        for(Book k: ksiazki)
-            System.out.println(k);
-    }
-    
-    
-    /**
-     *
-     * @param baza - tablica
-     * @param pole - pole jakie należ wybrać
-     * @param wartosc - wartość jaką ma mieć pole do usunięcia
+     select czytelnicy.imie, czytelnicy.nazwisko,  ksiazki.tytul
+     from wypozyczenia 
+     join czytelnicy on
+     wypozyczenia.id_czytelnika=czytelnicy.id_czytelnika
+     join ksiazki on
+     wypozyczenia.id_ksiazki=ksiazki.id_ksiazki
      */
-    public void usun(String baza, String pole, String wartosc) {
-        try {
-            String usunSQL = "DELETE FROM " + baza + " WHERE " + pole +
-                    "='" + wartosc + "';";
-            ResultSet wynik = stat.executeQuery(usunSQL);
-            wynik.close();
-        } catch (Exception e){
-        //System.out.println("Nie mogę usunąć danych " + e.getMessage());
-        }
-    }
     
-    public void zamien (String baza, String poleZmieniane, String nowaWartosc, String poleSzukane, String wartoscSzukana){
-         try {
-            String zmienSQL = "UPDATE " + baza + " SET "
-                    + poleZmieniane + " = '" + nowaWartosc
-                    + "' WHERE " + poleSzukane + "=='" + wartoscSzukana + "';";
- 
-            ResultSet wynik = stat.executeQuery(zmienSQL);
-            System.out.println("Wynik polecenia:\n" + zmienSQL);
-            wynik.close();
-        } catch (Exception e) {
-            System.out.println("Nie mogę poprawić danych " + e.getMessage());
+    public void usunCzytelnik(User czytelnik) {
+        try {
+            prepStmt = conn.prepareStatement(
+                    "DELETE FROM czytelnicy WHERE id_czytelnika = ?");
+            prepStmt.setInt(1, czytelnik.getidentyfikator());
+            prepStmt.addBatch();
+            prepStmt.executeBatch();
+        } catch (SQLException e) {
+            System.err.println("Blad przy usuwaniu czytelnika");
         }
+
     }
- 
+
+    public void usunKsiazka(Book ksiazka) {
+        try {
+            prepStmt = conn.prepareStatement(
+                    "DELETE FROM ksiazki WHERE id_ksiazki = ?");
+            prepStmt.setInt(1, ksiazka.getBookID());
+            prepStmt.addBatch();
+            prepStmt.executeBatch();
+        } catch (SQLException e) {
+            System.err.println("Blad przy usuwaniu książki");
+        }
+
+    }
+
+//    public void zamien(String baza, String poleZmieniane, String nowaWartosc, String poleSzukane, String wartoscSzukana) {
+//        try {
+//            String zmienSQL = "UPDATE " + baza + " SET "
+//                    + poleZmieniane + " = '" + nowaWartosc
+//                    + "' WHERE " + poleSzukane + "=='" + wartoscSzukana + "';";
+//
+//            ResultSet wynik = stat.executeQuery(zmienSQL);
+//            System.out.println("Wynik polecenia:\n" + zmienSQL);
+//            wynik.close();
+//        } catch (Exception e) {
+//            System.out.println("Nie mogę poprawić danych " + e.getMessage());
+//        }
+//    }
     public void closeConnection() {
         try {
             conn.close();
