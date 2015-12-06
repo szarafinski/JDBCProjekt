@@ -52,12 +52,12 @@ public class Logic {
                 command = "SELECT * FROM czytelnicy";
             } else if (stosCommand.size() == 1) {
                 command = "SELECT * FROM czytelnicy WHERE "
-                        + stosTablica.pop() + " LIKE '%" + stosCommand.pop() + "%' ";
+                        + stosTablica.pop() + " LIKE '" + stosCommand.pop() + "%' ";
             } else {
                 command = "SELECT * FROM czytelnicy WHERE "
-                        + stosTablica.pop() + " LIKE '%" + stosCommand.pop() + "%' ";
+                        + stosTablica.pop() + " LIKE '" + stosCommand.pop() + "%' ";
                 while (!stosCommand.isEmpty()) {
-                    command += " and " + stosTablica.pop() + " LIKE '%" + stosCommand.pop() + "%' ";
+                    command += " and " + stosTablica.pop() + " LIKE '" + stosCommand.pop() + "%' ";
                 }
             }
         } catch (EmptyStackException e) {
@@ -106,12 +106,12 @@ public class Logic {
                 command = "SELECT * FROM ksiazki";
             } else if (stosCommand.size() == 1) {
                 command = "SELECT * FROM ksiazki WHERE "
-                        + stosTablica.pop() + " LIKE '%" + stosCommand.pop() + "%' ";
+                        + stosTablica.pop() + " LIKE '" + stosCommand.pop() + "%' ";
             } else {
                 command = "SELECT * FROM ksiazki WHERE "
-                        + stosTablica.pop() + " LIKE '%" + stosCommand.pop() + "%' ";
+                        + stosTablica.pop() + " LIKE '" + stosCommand.pop() + "%' ";
                 while (!stosCommand.isEmpty()) {
-                    command += " and " + stosTablica.pop() + " LIKE '%" + stosCommand.pop() + "%' ";
+                    command += " and " + stosTablica.pop() + " LIKE '" + stosCommand.pop() + "%' ";
                 }
             }
         } catch (EmptyStackException e) {
