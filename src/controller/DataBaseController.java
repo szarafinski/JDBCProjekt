@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import model.User;
 import model.Book;
+import model.Wypozyczenie;
 
 /**
  *
@@ -155,16 +156,65 @@ public class DataBaseController {
 
     }
 
-    /* select wypożyczenia:
+    public List<Wypozyczenie> selectKsiazkiCzytelnika(User czytelnik) {
+        List<Wypozyczenie> wypozyczone = new LinkedList<>();
+        try {
+            result = stat.executeQuery(
+                    "select wypozyczenia.id_wypozycz, czytelnicy.imie, czytelnicy.nazwisko,  ksiazki.tytul, ksiazki.autor\n"
+                    + "from wypozyczenia \n"
+                    + "join czytelnicy on\n"
+                    + "wypozyczenia.id_czytelnika=czytelnicy.id_czytelnika\n"
+                    + "join ksiazki on\n"
+                    + "wypozyczenia.id_ksiazki=ksiazki.id_ksiazki\n"
+                    + "where czytelnicy.id_czytelnika='" + czytelnik.getidentyfikator() + "'"
+            );
+            int id;
+            String  tytul, autor, imie, nazwisko;
+            while (result.next()) {
+                id = result.getInt("id_wypozycz");
+                tytul = result.getString("tytul");
+                autor = result.getString("autor");
+                imie = result.getString("imie");
+                nazwisko = result.getString("nazwisko");
+                wypozyczone.add(new Wypozyczenie(imie, nazwisko, tytul, autor, id));
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Blad przy wybieraniu wypożyczonych Książek");
+        }
+        return wypozyczone;
+
+    }
     
-     select czytelnicy.imie, czytelnicy.nazwisko,  ksiazki.tytul
-     from wypozyczenia 
-     join czytelnicy on
-     wypozyczenia.id_czytelnika=czytelnicy.id_czytelnika
-     join ksiazki on
-     wypozyczenia.id_ksiazki=ksiazki.id_ksiazki
-     */
-    
+public List<Wypozyczenie> selectWszszystkieKsiazkiCzytelnikow() {
+        List<Wypozyczenie> wypozyczone = new LinkedList<>();
+        try {
+            result = stat.executeQuery(
+                    "select wypozyczenia.id_wypozycz, czytelnicy.imie, czytelnicy.nazwisko,  ksiazki.tytul, ksiazki.autor\n"
+                    + "from wypozyczenia \n"
+                    + "join czytelnicy on\n"
+                    + "wypozyczenia.id_czytelnika=czytelnicy.id_czytelnika\n"
+                    + "join ksiazki on\n"
+                    + "wypozyczenia.id_ksiazki=ksiazki.id_ksiazki\n"
+            );
+            int id;
+            String  tytul, autor, imie, nazwisko;
+            while (result.next()) {
+                id = result.getInt("id_wypozycz");
+                tytul = result.getString("tytul");
+                autor = result.getString("autor");
+                imie = result.getString("imie");
+                nazwisko = result.getString("nazwisko");
+                wypozyczone.add(new Wypozyczenie(imie, nazwisko, tytul, autor, id));
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Blad przy wybieraniu wypożyczonych Książek");
+        }
+        return wypozyczone;
+
+    }
+
     public void usunCzytelnik(User czytelnik) {
         try {
             prepStmt = conn.prepareStatement(
@@ -190,6 +240,20 @@ public class DataBaseController {
         }
 
     }
+
+    public void usunWypozyczenie(Wypozyczenie wypozyczenie) {
+        try {
+            prepStmt = conn.prepareStatement(
+                    "DELETE FROM wypozyczenia WHERE id_wypozycz = ?");
+            prepStmt.setInt(1, wypozyczenie.getId_wypozyczenia());
+            prepStmt.addBatch();
+            prepStmt.executeBatch();
+        } catch (SQLException e) {
+            System.err.println("Blad przy usuwaniu książki");
+        }
+
+    }
+    
 
 //    public void zamien(String baza, String poleZmieniane, String nowaWartosc, String poleSzukane, String wartoscSzukana) {
 //        try {

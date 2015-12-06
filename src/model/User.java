@@ -17,7 +17,7 @@ public class User {
     private final SimpleStringProperty ulica;
     
  
-     public User(String imie, String nazwisko, String pesel) {
+    public User(String imie, String nazwisko, String pesel) {
         this.imie = new SimpleStringProperty(imie);
         this.nazwisko = new SimpleStringProperty(nazwisko);
         this.pesel = new SimpleStringProperty(pesel);

@@ -1,4 +1,3 @@
-
 package View;
 
 import controller.DataBaseController;
@@ -30,6 +29,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Book;
 import model.User;
+import model.Wypozyczenie;
 
 /**
  *
@@ -39,6 +39,7 @@ public final class View {
 
     ObservableList<User> data;
     ObservableList<Book> dataBook;
+    ObservableList dataUserBook;
     BorderPane border, border2;
     Scene scene, popup;
     Stage stage, newStage;
@@ -49,18 +50,21 @@ public final class View {
             bookName, wydawnictwoName, bookIssueDate, bookAuthor, bookISBN;
     TextField userNameTextField, userLastNameTextField, userPESELTextField, userTownTextField, userStrTextField,
             bookNameTextField, wydawnictwoNameTextField, bookIssueDateTextField, bookAuthorTextField, bookISBNTextField;
-    Button userSzukajBtn, userDodajBtn, userUsunBtn, okZamknij,
-            bookSzukajBtn, bookUsunBtn, bookDodajBtn;
-    VBox uklad;
+    Button userSzukajBtn, userDodajBtn, userUsunBtn, userClearBtn, userShowBooks, okZamknij,
+            bookSzukajBtn, bookUsunBtn, bookDodajBtn, bookClearBtn,
+            usunUserBookBtn, wypozyczoneBookBtn;
+    VBox uklad, tabUserBooks;
     HBox poziomePrzyciski;
     GridPane grid;
-    TableView tabelaUser, tabelaBook;
+    TableView tabelaUser, tabelaBook, tableUserBooks;
     TableColumn nameCol, lastNameCol, peselCol, miastoCol, ulicaCol,
-            bookNameCol, bookAuthorCol, wydawnictwoCol, isbnCol, bookYearCol;
+            bookNameCol, bookAuthorCol, wydawnictwoCol, isbnCol, bookYearCol,
+            userBookNameCol, userBookAuthorCol, userBookLastNameCol, userBookTitleCol, userIDWypozyczeniaCol;
 
     public View() {
         this.data = FXCollections.observableArrayList();
         this.dataBook = FXCollections.observableArrayList();
+        this.dataUserBook = FXCollections.observableArrayList();
     }
 
     //@Override
@@ -94,7 +98,7 @@ public final class View {
         tabPane.getTabs().addAll(
                 manageCzytelnikTab(),
                 manageBookTab(),
-                createMniam()
+                createUserBooks()
         );
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         return tabPane;
@@ -118,9 +122,11 @@ public final class View {
         bookSzukajBtn = new Button("Szukaj");
         bookDodajBtn = new Button("Dodaj");
         bookUsunBtn = new Button("Usuń");
+        bookClearBtn = new Button("Wyczysć");
 
         bookSzukajBtn.setOnAction(new ButtonActions());
         bookDodajBtn.setOnAction(new ButtonActions());
+        bookClearBtn.setOnAction(new ButtonActions());
         bookUsunBtn.setOnAction(new ButtonActions());
 
         uklad = new VBox(8);
@@ -135,14 +141,13 @@ public final class View {
         poziomePrzyciski.getChildren().addAll(
                 bookSzukajBtn,
                 bookDodajBtn,
-                bookUsunBtn
+                bookClearBtn
         );
 
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(5);
-        //grid.add(sceneTitle, 0, 0, 2, 1);
         grid.add(bookName, 0, 1);
         grid.add(bookNameTextField, 0, 2);
         grid.add(bookAuthor, 1, 1);
@@ -158,7 +163,8 @@ public final class View {
         uklad.getChildren().addAll(
                 sceneTitle,
                 grid,
-                createBookTableView()
+                createBookTableView(),
+                bookUsunBtn
         );
         tab.setContent(uklad);
         return tab;
@@ -182,10 +188,14 @@ public final class View {
         userSzukajBtn = new Button("Szukaj");
         userDodajBtn = new Button("Dodaj");
         userUsunBtn = new Button("Usuń");
+        userClearBtn = new Button("Wyczyść");
+        userShowBooks = new Button("Książki Czytelnika");
 
         userSzukajBtn.setOnAction(new ButtonActions());
         userDodajBtn.setOnAction(new ButtonActions());
         userUsunBtn.setOnAction(new ButtonActions());
+        userClearBtn.setOnAction(new ButtonActions());
+        userShowBooks.setOnAction(new ButtonActions());
 
         uklad = new VBox(8);
         uklad.setPadding(new Insets(10, 10, 10, 10));
@@ -199,7 +209,7 @@ public final class View {
         poziomePrzyciski.getChildren().addAll(
                 userSzukajBtn,
                 userDodajBtn,
-                userUsunBtn
+                userClearBtn
         );
 
         grid = new GridPane();
@@ -216,11 +226,13 @@ public final class View {
         grid.add(userTownTextField, 0, 5);
         grid.add(userStr, 1, 4);
         grid.add(userStrTextField, 1, 5);
-        grid.add(poziomePrzyciski, 2, 5);
+        grid.add(poziomePrzyciski, 2, 4);
+        grid.add(userShowBooks, 2, 5, 3, 1);
         uklad.getChildren().addAll(
                 sceneTitle,
                 grid,
-                createUserTableView()
+                createUserTableView(),
+                userUsunBtn
         );
         tab.setContent(uklad);
         return tab;
@@ -301,37 +313,67 @@ public final class View {
         return tabelaBook;
     }
 
-    private Tab createMniam() {
-        tab = new Tab("Zarządzanie Książkami");
-        TableView table = new TableView();
+    private Tab createUserBooks() {
+        tab = new Tab("Zarządzanie Książkami Użytkowników");
+        
+        tableUserBooks = new TableView();
 
         final Label label = new Label("Address Book");
         label.setFont(new Font("Arial", 20));
 
-        table.setEditable(true);
+        tableUserBooks.setEditable(true);
 
-        nameCol = new TableColumn("Nazwisko");
-        lastNameCol = new TableColumn("Nazwisko");
-        peselCol = new TableColumn("PESEL");
+        userBookNameCol = new TableColumn("Imię");
+        userBookAuthorCol = new TableColumn("Autor");
+        userBookLastNameCol = new TableColumn("Nazwisko");
+        userBookTitleCol = new TableColumn("Tytuł");
+        userBookTitleCol.setMinWidth(200);
+        userIDWypozyczeniaCol = new TableColumn("Wypożyczeni Nr"); 
 
-        nameCol.setCellValueFactory(
+        userBookNameCol.setCellValueFactory(
                 new PropertyValueFactory<>("imie")
         );
-        lastNameCol.setCellValueFactory(
+        userBookLastNameCol.setCellValueFactory(
                 new PropertyValueFactory<>("nazwisko")
         );
-        peselCol.setCellValueFactory(
-                new PropertyValueFactory<>("kupa")
+        userBookAuthorCol.setCellValueFactory(
+                new PropertyValueFactory<>("autor")
+        );
+        userBookTitleCol.setCellValueFactory(
+                new PropertyValueFactory<>("tytul")
+        );
+        userIDWypozyczeniaCol.setCellValueFactory(
+                new PropertyValueFactory<>("id_wypozyczenia")
         );
 
-        nameCol.setMinWidth(100);
-        lastNameCol.setMinWidth(100);
-        peselCol.setMinWidth(200);
+        tableUserBooks.setItems(dataUserBook);
 
-        table.setItems(data);
-
-        table.getColumns().addAll(nameCol, lastNameCol, peselCol);
-        tab.setContent(table);
+        tableUserBooks.getColumns().addAll(
+                userIDWypozyczeniaCol, 
+                userBookNameCol, 
+                userBookLastNameCol, 
+                userBookAuthorCol, 
+                userBookTitleCol
+        );
+        
+        usunUserBookBtn = new Button("Książka oddana przez Czytelnika");
+        usunUserBookBtn.setOnAction(new ButtonActions());
+        wypozyczoneBookBtn = new Button("Wszystkie wypożyczone książki");
+                wypozyczoneBookBtn.setOnAction(new ButtonActions());
+        
+        sceneTitle = new Text("Wypożyczone Książki");
+        sceneTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        
+        tabUserBooks  = new VBox(8);
+        tabUserBooks.setPadding(new Insets(10, 10, 10, 10));
+        
+        tabUserBooks.getChildren().addAll(
+                sceneTitle,
+                wypozyczoneBookBtn,
+                tableUserBooks,
+                usunUserBookBtn
+        );
+        tab.setContent(tabUserBooks);
         return tab;
     }
 
@@ -343,7 +385,7 @@ public final class View {
             komunikat.setWrappingWidth(150);
             if (userUsunBtn == e.getSource()) {
 
-                if (tabelaUser.getSelectionModel().getSelectedIndex() > 0) {
+                if (tabelaUser.getSelectionModel().getSelectedIndex() >= 0) {
                     User selectedUser = (User) tabelaUser.getSelectionModel().getSelectedItem();
 
                     DataBaseController db = new DataBaseController();
@@ -396,7 +438,7 @@ public final class View {
 
             if (bookUsunBtn == e.getSource()) {
 
-                if (tabelaBook.getSelectionModel().getSelectedIndex() > 0) {
+                if (tabelaBook.getSelectionModel().getSelectedIndex() >= 0) {
                     Book selectedBook = (Book) tabelaBook.getSelectionModel().getSelectedItem();
                     DataBaseController db = new DataBaseController();
                     db.usunKsiazka(selectedBook);
@@ -418,8 +460,6 @@ public final class View {
                         //Integer.parseInt(bookISBNTextField.getText())
                         wydawnictwoNameTextField.getText(),
                         bookIssueDateTextField.getText()
-                
-
                 );
                 dataBook.add(newBook);
                 db.insertKsiazka(newBook);
@@ -440,7 +480,6 @@ public final class View {
                         //Integer.parseInt(bookISBNTextField.getText())
                         wydawnictwoNameTextField.getText(),
                         bookIssueDateTextField.getText()
-                
                 );
 
                 Logic logic = new Logic();
@@ -448,6 +487,76 @@ public final class View {
                 dataBook.clear();
                 for (Book ksiazka : ksiazki) {
                     dataBook.add(ksiazka);
+                }
+            }
+            if (userClearBtn == e.getSource()) {
+                userNameTextField.clear();
+                userLastNameTextField.clear();
+                userPESELTextField.clear();
+                userTownTextField.clear();
+                userStrTextField.clear();
+                tabelaUser.getSelectionModel().clearSelection();
+            }
+
+            if (bookClearBtn == e.getSource()) {
+                bookNameTextField.clear();
+                wydawnictwoNameTextField.clear();
+                bookIssueDateTextField.clear();
+                bookAuthorTextField.clear();
+                bookISBNTextField.clear();
+                tabelaBook.getSelectionModel().clearSelection();
+            }
+            if (userShowBooks == e.getSource()) {
+                if (tabelaUser.getSelectionModel().getSelectedIndex() >= 0) {
+                    dataUserBook.clear();
+
+                    User selectedUser = (User) tabelaUser.getSelectionModel().getSelectedItem();
+
+                    DataBaseController db = new DataBaseController();
+                    List<Wypozyczenie> wypozyczone = db.selectKsiazkiCzytelnika(selectedUser);
+
+                    for (Wypozyczenie wypozyczenie : wypozyczone) {
+                        dataUserBook.add(wypozyczenie);
+                        
+                    }
+                    if (dataUserBook.isEmpty()) {
+                        komunikat.setText("Brak wypożyczonych książek przez użytkownika");
+                    } else {
+                        komunikat.setText("Dane zostały pobrane dla: \n"
+                                + selectedUser.getImie() + " " + selectedUser.getNazwisko());
+                    }
+
+                    newStage.showAndWait();
+                }
+                tabelaUser.getSelectionModel().clearSelection();
+            }
+              
+            if (usunUserBookBtn == e.getSource()) {
+
+                if (tableUserBooks.getSelectionModel().getSelectedIndex() >= 0) {
+                    Wypozyczenie selectedBook = (Wypozyczenie) tableUserBooks.getSelectionModel().getSelectedItem();
+                    
+                    DataBaseController db = new DataBaseController();
+                    db.usunWypozyczenie(selectedBook);
+                    dataUserBook.remove(selectedBook);
+
+                    komunikat.setText("Została usunięta ksiazka o parametrach: \n"
+                            + selectedBook.toString());
+                    newStage.showAndWait();
+                }
+                tableUserBooks.getSelectionModel().clearSelection();
+            }
+            
+            if (wypozyczoneBookBtn == e.getSource()) {
+                dataUserBook.clear();
+                
+                DataBaseController db = new DataBaseController();
+                List<Wypozyczenie> wypozyczone = db.selectWszszystkieKsiazkiCzytelnikow();
+
+                    for (Wypozyczenie wypozyczenie : wypozyczone) {
+                        dataUserBook.add(wypozyczenie);
+                        
+                
                 }
             }
 

@@ -59,7 +59,6 @@ public class Logic {
                 while (!stosCommand.isEmpty()) {
                     command += " and " + stosTablica.pop() + " LIKE '%" + stosCommand.pop() + "%' ";
                 }
-                System.out.println(command);
             }
         } catch (EmptyStackException e) {
         }
