@@ -51,7 +51,7 @@ public final class View {
     TextField userNameTextField, userLastNameTextField, userPESELTextField, userTownTextField, userStrTextField,
             bookNameTextField, wydawnictwoNameTextField, bookIssueDateTextField, bookAuthorTextField, bookISBNTextField;
     Button userSzukajBtn, userDodajBtn, userUsunBtn, userClearBtn, userShowBooks, okZamknij,
-            bookSzukajBtn, bookUsunBtn, bookDodajBtn, bookClearBtn,
+            bookSzukajBtn, bookUsunBtn, bookDodajBtn, bookClearBtn, bookWypozyczBtn,
             usunUserBookBtn, wypozyczoneBookBtn;
     VBox uklad, tabUserBooks;
     HBox poziomePrzyciski;
@@ -122,12 +122,15 @@ public final class View {
         bookSzukajBtn = new Button("Szukaj");
         bookDodajBtn = new Button("Dodaj");
         bookUsunBtn = new Button("Usuń");
-        bookClearBtn = new Button("Wyczysć");
+        bookClearBtn = new Button("Wyczyść");
+        bookWypozyczBtn = new Button("Wypożycz książkę");
 
         bookSzukajBtn.setOnAction(new ButtonActions());
         bookDodajBtn.setOnAction(new ButtonActions());
         bookClearBtn.setOnAction(new ButtonActions());
         bookUsunBtn.setOnAction(new ButtonActions());
+        bookWypozyczBtn.setOnAction(new ButtonActions());
+        
 
         uklad = new VBox(8);
         uklad.setPadding(new Insets(10, 10, 10, 10));
@@ -141,7 +144,8 @@ public final class View {
         poziomePrzyciski.getChildren().addAll(
                 bookSzukajBtn,
                 bookDodajBtn,
-                bookClearBtn
+                bookClearBtn,
+                bookWypozyczBtn
         );
 
         grid = new GridPane();
@@ -237,7 +241,7 @@ public final class View {
         tab.setContent(uklad);
         return tab;
     }
-
+//zarzadzanie czytelnikami
     private TableView createUserTableView() {
         tabelaUser = new TableView();
         tabelaUser.setEditable(true);
@@ -274,7 +278,7 @@ public final class View {
         tabelaUser.setItems(data);
         return tabelaUser;
     }
-
+//zarzadzenie ksiazkami
     private TableView createBookTableView() {
         tabelaBook = new TableView();
         tabelaBook.setEditable(true);
@@ -301,6 +305,14 @@ public final class View {
         bookYearCol.setMinWidth(100);
         bookYearCol.setCellValueFactory(
                 new PropertyValueFactory<>("bookRokWydania"));
+        
+        
+        
+        
+        
+        
+        
+        
 
         tabelaBook.getColumns().setAll(
                 bookNameCol,
@@ -415,7 +427,7 @@ public final class View {
                 userPESELTextField.clear();
                 userTownTextField.clear();
                 userStrTextField.clear();
-                komunikat.setText("został doadny użytkownik");
+                komunikat.setText("został dodany użytkownik");
                 newStage.showAndWait();
             }
 
@@ -450,6 +462,18 @@ public final class View {
                 }
                 tabelaBook.getSelectionModel().clearSelection();
             }
+            
+            if (bookWypozyczBtn == e.getSource()){
+                
+               
+               System.out.println("nsihf");
+                
+                
+                
+                
+                
+            }
+            
 
             if (bookDodajBtn == e.getSource()) {
                 DataBaseController db = new DataBaseController();
@@ -468,7 +492,7 @@ public final class View {
                 bookIssueDateTextField.clear();
                 bookAuthorTextField.clear();
                 bookISBNTextField.clear();
-                komunikat.setText("została doadna książka");
+                komunikat.setText("została dodana książka");
                 newStage.showAndWait();
             }
 
