@@ -392,7 +392,7 @@ public final class View {
                     db.usunCzytelnik(selectedUser);
                     data.remove(selectedUser);
                     komunikat.setText("Został usunięty czytelnik: \n"
-                            + selectedUser.toString());
+                            + selectedUser.getImie() + " " + selectedUser.getNazwisko());
                     newStage.showAndWait();
                 }
                 tabelaUser.getSelectionModel().clearSelection();
@@ -415,7 +415,7 @@ public final class View {
                 userPESELTextField.clear();
                 userTownTextField.clear();
                 userStrTextField.clear();
-                komunikat.setText("został doadny użytkownik");
+                komunikat.setText("został doadny nowy czytelnik");
                 newStage.showAndWait();
             }
 
@@ -444,8 +444,8 @@ public final class View {
                     db.usunKsiazka(selectedBook);
                     dataBook.remove(selectedBook);
 
-                    komunikat.setText("Została usunięta ksiazka o parametrach: \n"
-                            + selectedBook.toString());
+                    komunikat.setText("Została usunięta ksiazka: \n"
+                            + selectedBook.getBookAuthor() + " - " + selectedBook.getBookTitle());
                     newStage.showAndWait();
                 }
                 tabelaBook.getSelectionModel().clearSelection();
@@ -468,7 +468,7 @@ public final class View {
                 bookIssueDateTextField.clear();
                 bookAuthorTextField.clear();
                 bookISBNTextField.clear();
-                komunikat.setText("została doadna książka");
+                komunikat.setText("została doadna nowa książka");
                 newStage.showAndWait();
             }
 
@@ -520,7 +520,7 @@ public final class View {
                         
                     }
                     if (dataUserBook.isEmpty()) {
-                        komunikat.setText("Brak wypożyczonych książek przez użytkownika");
+                        komunikat.setText("Brak wypożyczonych książek przez zaznaczonego czytelnika");
                     } else {
                         komunikat.setText("Dane zostały pobrane dla: \n"
                                 + selectedUser.getImie() + " " + selectedUser.getNazwisko());
@@ -540,8 +540,8 @@ public final class View {
                     db.usunWypozyczenie(selectedBook);
                     dataUserBook.remove(selectedBook);
 
-                    komunikat.setText("Została usunięta ksiazka o parametrach: \n"
-                            + selectedBook.toString());
+                    komunikat.setText("Została usunięta ksiazka: \n"
+                            + selectedBook.getAutor() + " - " + selectedBook.getTytul());
                     newStage.showAndWait();
                 }
                 tableUserBooks.getSelectionModel().clearSelection();
