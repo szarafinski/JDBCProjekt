@@ -1,3 +1,4 @@
 /aplikacjaBiblioteka/target/
 /mavenproject1/target/
 /build/
+*.db
