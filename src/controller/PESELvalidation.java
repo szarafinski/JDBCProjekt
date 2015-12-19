@@ -24,7 +24,7 @@ public class PESELvalidation {
             valid = checkSum() && checkMonth() && checkDay();
         }
     }
-
+    
     public boolean isValid() {
         return valid;
     }
