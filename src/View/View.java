@@ -2,6 +2,7 @@ package View;
 
 import controller.DataBaseController;
 import controller.Logic;
+import controller.PESELvalidation;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -60,6 +61,7 @@ public final class View {
     TableColumn nameCol, lastNameCol, peselCol, miastoCol, ulicaCol,
             bookNameCol, bookAuthorCol, wydawnictwoCol, isbnCol, bookYearCol,
             userBookNameCol, userBookAuthorCol, userBookLastNameCol, userBookTitleCol, userIDWypozyczeniaCol;
+    PESELvalidation czyPoprawnyPESEL; 
 
     public View() {
         this.data = FXCollections.observableArrayList();
@@ -408,6 +410,10 @@ public final class View {
                         userTownTextField.getText(),
                         userStrTextField.getText()
                 );
+                czyPoprawnyPESEL = new PESELvalidation(userPESELTextField.getText());
+                if (czyPoprawnyPESEL.isValid()){
+                    System.out.println("poprawny numer pesel");
+                }
                 data.add(newUser);
                 db.insertCzytelnik(newUser);
                 userNameTextField.clear();
