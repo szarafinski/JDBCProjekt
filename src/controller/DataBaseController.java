@@ -24,60 +24,58 @@ public class DataBaseController {
     private Connection conn;
     private Statement stat;
     private PreparedStatement prepStmt;
-    ResultSet result;
-
+    
+    
+    ResultSet
+            result;
+    private PreparedStatement czytelnicyInstertPS;
+    private PreparedStatement ksiazkiInsertPS; 
+    private PreparedStatement usunCzytelnikPS;
+    private PreparedStatement usunKsiazkaPS;
+    private PreparedStatement usunWypozyczeniePS;
+    
+    
     public DataBaseController() {
         try {
             Class.forName(DataBaseController.DRIVER);
-        } catch (ClassNotFoundException e) {
-            System.err.println("Brak sterownika JDBC");
-        }
-
-        try {
             conn = DriverManager.getConnection(DB_URL);
             stat = conn.createStatement();
-        } catch (SQLException e) {
-            System.err.println("Problem z otwarciem polaczenia");
+            
+            
+            czytelnicyInstertPS = conn.prepareStatement(
+                    "INSERT INTO czytelnicy VALUES (NULL, ?, ?, ?, ?, ?);");
+            ksiazkiInsertPS = conn.prepareStatement(
+                    "INSERT INTO ksiazki VALUES (NULL, ?, ?, ?, ?, ?);");
+            usunCzytelnikPS = conn.prepareStatement(
+                    "DELETE FROM czytelnicy WHERE id_czytelnika = ?");
+            usunKsiazkaPS = conn.prepareStatement(
+                    "DELETE FROM ksiazki WHERE id_ksiazki = ?");
+            usunWypozyczeniePS = conn.prepareStatement(
+                    "DELETE FROM wypozyczenia WHERE id_wypozycz = ?");
+            
+            
+            
+            
         }
+         catch (ClassNotFoundException e) {
+        System.err.println("Brak sterownika JDBC");
+        }
+        catch (SQLException e) {
+        System.err.println("Problem z otwarciem polaczenia");
+        }   
 
     }
 
-//    private void createTables() {
-//        String createCzytelnicy = "CREATE TABLE IF NOT EXISTS "
-//                + "czytelnicy "
-//                + "(id_czytelnika INTEGER PRIMARY KEY AUTOINCREMENT, "
-//                + "imie varchar(255), "
-//                + "nazwisko varchar(255), "
-//                + "pesel int)";
-//        String createKsiazki = "CREATE TABLE IF NOT EXISTS "
-//                + "ksiazki "
-//                + "(id_ksiazki INTEGER PRIMARY KEY AUTOINCREMENT, "
-//                + "tytul varchar(255), "
-//                + "autor varchar(255))";
-//        String createWypozyczenia = "CREATE TABLE IF NOT EXISTS "
-//                + "wypozyczenia "
-//                + "(id_wypozycz INTEGER PRIMARY KEY AUTOINCREMENT, "
-//                + "id_czytelnika int, "
-//                + "id_ksiazki int)";
-//        try {
-//            stat.execute(createCzytelnicy);
-//            stat.execute(createKsiazki);
-//            stat.execute(createWypozyczenia);
-//        } catch (SQLException e) {
-//            System.err.println("Blad przy tworzeniu tabeli");
-//
-//        }
-//    }
+
     public void insertCzytelnik(User czytelnik) {
         try {
-            prepStmt = conn.prepareStatement(
-                    "INSERT INTO czytelnicy VALUES (NULL, ?, ?, ?, ?, ?);");
-            prepStmt.setString(1, czytelnik.getImie());
-            prepStmt.setString(2, czytelnik.getNazwisko());
-            prepStmt.setString(3, czytelnik.getPesel());
-            prepStmt.setString(4, czytelnik.getMiasto());
-            prepStmt.setString(5, czytelnik.getUlica());
-            prepStmt.execute();
+            
+            czytelnicyInstertPS.setString(1, czytelnik.getImie());
+            czytelnicyInstertPS.setString(2, czytelnik.getNazwisko());
+            czytelnicyInstertPS.setString(3, czytelnik.getPesel());
+            czytelnicyInstertPS.setString(4, czytelnik.getMiasto());
+            czytelnicyInstertPS.setString(5, czytelnik.getUlica());
+            czytelnicyInstertPS.execute();
         } catch (SQLException e) {
             System.err.println("Błąd przy wstawianiu czytelnika");
         }
@@ -86,33 +84,20 @@ public class DataBaseController {
 
     public void insertKsiazka(Book ksiazka) {
         try {
-            prepStmt = conn.prepareStatement(
-                    "INSERT INTO ksiazki VALUES (NULL, ?, ?, ?, ?, ?);");
-            prepStmt.setString(1, ksiazka.getBookTitle());
-            prepStmt.setString(2, ksiazka.getBookAuthor());
-            prepStmt.setString(3, ksiazka.getBookWydawnictwo());
-            prepStmt.setString(4, ksiazka.getBookISBN());
-            prepStmt.setString(5, ksiazka.getBookRokWydania());
-            prepStmt.addBatch();
-            prepStmt.executeBatch();
+
+            ksiazkiInsertPS.setString(1, ksiazka.getBookTitle());
+            ksiazkiInsertPS.setString(2, ksiazka.getBookAuthor());
+            ksiazkiInsertPS.setString(3, ksiazka.getBookWydawnictwo());
+            ksiazkiInsertPS.setString(4, ksiazka.getBookISBN());
+            ksiazkiInsertPS.setString(5, ksiazka.getBookRokWydania());
+            ksiazkiInsertPS.addBatch();
+            ksiazkiInsertPS.executeBatch();
         } catch (SQLException e) {
             System.err.println("Blad przy wstawianiu książki");
         }
     }
 
-//    public void insertWypozycz(int idCzytelnik, int idKsiazka) {
-//        try {
-//            prepStmt = conn.prepareStatement(
-//                    "insert into wypozyczenia values (NULL, ?, ?);");
-//            prepStmt.setInt(1, idCzytelnik);
-//            prepStmt.setInt(2, idKsiazka);
-//            prepStmt.execute();
-//        } catch (SQLException e) {
-//            System.err.println("Blad przy wypozyczaniu");
-//
-//        }
-//
-//    }
+
     public List<User> selectCzytelnicy(String command) {
         List<User> czytelnicy = new LinkedList<>();
         try {
@@ -217,11 +202,10 @@ public List<Wypozyczenie> selectWszszystkieKsiazkiCzytelnikow() {
 
     public void usunCzytelnik(User czytelnik) {
         try {
-            prepStmt = conn.prepareStatement(
-                    "DELETE FROM czytelnicy WHERE id_czytelnika = ?");
-            prepStmt.setInt(1, czytelnik.getidentyfikator());
-            prepStmt.addBatch();
-            prepStmt.executeBatch();
+
+            usunCzytelnikPS.setInt(1, czytelnik.getidentyfikator());
+            usunCzytelnikPS.addBatch();
+            usunCzytelnikPS.executeBatch();
         } catch (SQLException e) {
             System.err.println("Blad przy usuwaniu czytelnika");
         }
@@ -230,11 +214,10 @@ public List<Wypozyczenie> selectWszszystkieKsiazkiCzytelnikow() {
 
     public void usunKsiazka(Book ksiazka) {
         try {
-            prepStmt = conn.prepareStatement(
-                    "DELETE FROM ksiazki WHERE id_ksiazki = ?");
-            prepStmt.setInt(1, ksiazka.getBookID());
-            prepStmt.addBatch();
-            prepStmt.executeBatch();
+            
+            usunKsiazkaPS.setInt(1, ksiazka.getBookID());
+            usunKsiazkaPS.addBatch();
+            usunKsiazkaPS.executeBatch();
         } catch (SQLException e) {
             System.err.println("Blad przy usuwaniu książki");
         }
@@ -243,11 +226,10 @@ public List<Wypozyczenie> selectWszszystkieKsiazkiCzytelnikow() {
 
     public void usunWypozyczenie(Wypozyczenie wypozyczenie) {
         try {
-            prepStmt = conn.prepareStatement(
-                    "DELETE FROM wypozyczenia WHERE id_wypozycz = ?");
-            prepStmt.setInt(1, wypozyczenie.getId_wypozyczenia());
-            prepStmt.addBatch();
-            prepStmt.executeBatch();
+
+            usunWypozyczeniePS.setInt(1, wypozyczenie.getId_wypozyczenia());
+            usunWypozyczeniePS.addBatch();
+            usunWypozyczeniePS.executeBatch();
         } catch (SQLException e) {
             System.err.println("Blad przy usuwaniu książki");
         }

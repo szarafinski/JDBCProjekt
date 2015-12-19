@@ -414,6 +414,7 @@ public final class View {
                 if (czyPoprawnyPESEL.isValid()){
                     System.out.println("poprawny numer pesel");
                 }
+                if (!userNameTextField.getText().isEmpty()&&!userLastNameTextField.getText().isEmpty()&&!userPESELTextField.getText().isEmpty()&&!userTownTextField.getText().isEmpty()&&!userStrTextField.getText().isEmpty()){
                 data.add(newUser);
                 db.insertCzytelnik(newUser);
                 userNameTextField.clear();
@@ -423,7 +424,7 @@ public final class View {
                 userStrTextField.clear();
                 komunikat.setText("został doadny nowy czytelnik");
                 newStage.showAndWait();
-            }
+            }}
 
             if (userSzukajBtn == e.getSource()) {
                 User user = new User(
@@ -467,6 +468,7 @@ public final class View {
                         wydawnictwoNameTextField.getText(),
                         bookIssueDateTextField.getText()
                 );
+                if (!bookNameTextField.getText().isEmpty()&&!bookAuthorTextField.getText().isEmpty()&&!bookISBNTextField.getText().isEmpty()&&!wydawnictwoNameTextField.getText().isEmpty()&&!bookIssueDateTextField.getText().isEmpty()){
                 dataBook.add(newBook);
                 db.insertKsiazka(newBook);
                 bookNameTextField.clear();
@@ -476,7 +478,7 @@ public final class View {
                 bookISBNTextField.clear();
                 komunikat.setText("została doadna nowa książka");
                 newStage.showAndWait();
-            }
+            }}
 
             if (bookSzukajBtn == e.getSource()) {
                 Book newBook = new Book(
