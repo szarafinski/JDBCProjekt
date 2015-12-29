@@ -400,18 +400,29 @@ public final class View {
         sceneTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         
         tabUserBooks  = new VBox(8);
-        tabUserBooks.setPadding(new Insets(10, 10, 10, 10));
+        //tabUserBooks.setPadding(new Insets(10, 10, 10, 10));
+        tabUserBooks.setSpacing(10);
+        tabUserBooks.setAlignment(Pos.TOP_LEFT);
+        
+        grid = new GridPane();
+        grid.setAlignment(Pos.CENTER_LEFT);
+        grid.setHgap(10);
+        grid.setVgap(5);
+        grid.add(wypozyczoneBookBtn, 0, 1);
+        grid.add(addLendFactButton, 1, 1);
+        
         
         tabUserBooks.getChildren().addAll(
                 sceneTitle,
-                wypozyczoneBookBtn,
+                grid,
                 tableUserBooks,
-                usunUserBookBtn,
-                addLendFactButton
+                usunUserBookBtn
+                
         );
         tab.setContent(tabUserBooks);
         return tab;
     }
+
 
     private class ButtonActions implements EventHandler<ActionEvent> {
 
