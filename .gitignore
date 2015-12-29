@@ -2,3 +2,4 @@
 /mavenproject1/target/
 /build/
 *.db
+/dist/

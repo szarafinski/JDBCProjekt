@@ -50,6 +50,7 @@ public class DataBaseController {
             usunWypozyczeniePS = conn.prepareStatement(
                     "DELETE FROM wypozyczenia WHERE id_wypozycz = ?");
             wypozyczenieksiazki = conn.prepareStatement(
+                    //"insert into wypozyczenia (id_czytelnika, id_ksiazki) values ( ?, ?);");
                     "INSERT INTO wypozyczenia (id_czytelnika, id_ksiazki) VALUES  (?,?);");
                      //"insert into wypozyczenia values (NULL, ?, ?);");
             

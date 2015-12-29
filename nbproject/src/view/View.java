@@ -49,10 +49,10 @@ public final class View {
     Text sceneTitle, komunikat;
     Label userName, userLastName, userPESEL, userTown, userStr,
             bookName, wydawnictwoName, bookIssueDate, bookAuthor, bookISBN;
-    TextField userNameTextField, userLastNameTextField, userPESELTextField, userTownTextField, userStrTextField, 
-            bookNameTextField, wydawnictwoNameTextField, bookIssueDateTextField, bookAuthorTextField, bookISBNTextField;
-    Button userSzukajBtn, userDodajBtn, userUsunBtn, userClearBtn, userShowBooks, okZamknij,
-            bookSzukajBtn, bookUsunBtn, bookDodajBtn, bookClearBtn,  
+    TextField userNameTextField, userLastNameTextField, userPESELTextField, userTownTextField, userStrTextField, userIdTextField,
+            bookNameTextField, wydawnictwoNameTextField, bookIssueDateTextField, bookAuthorTextField, bookISBNTextField, bookIdTextField;
+    Button userSzukajBtn, userDodajBtn, userUsunBtn, userClearBtn, userShowBooks, okZamknij,userdupa,
+            bookSzukajBtn, bookUsunBtn, bookDodajBtn, bookClearBtn, bookWypozyczBtn, 
             usunUserBookBtn, wypozyczoneBookBtn, chooseUserButton, chooseBookButton, addLendFactButton;
     VBox uklad, tabUserBooks;
     HBox poziomePrzyciski;
@@ -130,20 +130,21 @@ public final class View {
         bookIssueDateTextField = new TextField();
         bookAuthorTextField = new TextField();
         bookISBNTextField = new TextField();
-        
+        userIdTextField = new TextField();
+        bookIdTextField = new TextField();
 
         bookSzukajBtn = new Button("Szukaj");
         bookDodajBtn = new Button("Dodaj");
         bookUsunBtn = new Button("Usuń");
         bookClearBtn = new Button("Wyczyść");
-       // bookWypozyczBtn = new Button("Wypożycz książkę");
+        bookWypozyczBtn = new Button("Wypożycz książkę");
         chooseBookButton = new Button("Wybierz książkę");
 
         bookSzukajBtn.setOnAction(new ButtonActions());
         bookDodajBtn.setOnAction(new ButtonActions());
         bookClearBtn.setOnAction(new ButtonActions());
         bookUsunBtn.setOnAction(new ButtonActions());
-        //bookWypozyczBtn.setOnAction(new ButtonActions());
+        bookWypozyczBtn.setOnAction(new ButtonActions());
         chooseBookButton.setOnAction(new ButtonActions());
         
 
@@ -160,7 +161,7 @@ public final class View {
                 bookSzukajBtn,
                 bookDodajBtn,
                 bookClearBtn,
-                //bookWypozyczBtn,
+                bookWypozyczBtn,
                 chooseBookButton
         );
 
@@ -176,6 +177,8 @@ public final class View {
         grid.add(wydawnictwoNameTextField, 2, 2);
         grid.add(bookISBN, 0, 4);
         grid.add(bookISBNTextField, 0, 5);
+        grid.add(userIdTextField, 0,6);
+        grid.add(bookIdTextField, 0,7);
         grid.add(bookIssueDate, 1, 4);
         grid.add(bookIssueDateTextField, 1, 5);
         grid.add(poziomePrzyciski, 2, 5);
@@ -211,7 +214,7 @@ public final class View {
         userUsunBtn = new Button("Usuń");
         userClearBtn = new Button("Wyczyść");
         userShowBooks = new Button("Książki Czytelnika");
-       
+        userdupa = new Button("marcin");
         chooseUserButton = new Button("Wybierz Czytelnika");
        // userWybierzuzytkownikaBtn= = new
 
@@ -220,7 +223,7 @@ public final class View {
         userUsunBtn.setOnAction(new ButtonActions());
         userClearBtn.setOnAction(new ButtonActions());
         userShowBooks.setOnAction(new ButtonActions());
-        
+        userdupa.setOnAction(new ButtonActions());
         chooseUserButton.setOnAction(new ButtonActions());
                 
         uklad = new VBox(8);
@@ -255,7 +258,7 @@ public final class View {
         grid.add(userStrTextField, 1, 5);
         grid.add(poziomePrzyciski, 2, 4);
         grid.add(userShowBooks, 2, 5, 3, 1);
-       
+        grid.add(userdupa, 3, 6, 3, 1);
         
         uklad.getChildren().addAll(
                 sceneTitle,
@@ -436,9 +439,17 @@ public final class View {
 
             }
             
-         
+            /*if(userdupa == e.getSource()){
+                if (tabelaUser.getSelectionModel().getSelectedIndex() >= 0) {
+                    User selectedUser = (User) tabelaUser.getSelectionModel().getSelectedItem();
+
+                    DataBaseController db = new DataBaseController();
+                    db.insertWypozyczenieKS(selectedUser);
+                    //data.add(selectedUser);
+                    newStage.showAndWait();
+                }
                 
-           
+            }*/
 
             if (userDodajBtn == e.getSource()) {
                 DataBaseController db = new DataBaseController();
@@ -492,11 +503,11 @@ public final class View {
                 tabelaBook.getSelectionModel().clearSelection();
             }
             
-            //if (bookWypozyczBtn == e.getSource()){      
+            if (bookWypozyczBtn == e.getSource()){      
 
                 
                 
-            // }
+             }
             
        //         Book selectedBook = (Book) tabelaBook.getSelectionModel().getSelectedItem();
 //                DataBaseController db = new DataBaseController();
