@@ -32,6 +32,7 @@ public class DataBaseController {
     private PreparedStatement usunKsiazkaPS;
     private PreparedStatement usunWypozyczeniePS;
     private PreparedStatement wypozyczenieksiazki;
+    private PreparedStatement usunWypozyczenieKS;
 
     public DataBaseController() {
         try {
@@ -50,9 +51,11 @@ public class DataBaseController {
             usunWypozyczeniePS = conn.prepareStatement(
                     "DELETE FROM wypozyczenia WHERE id_wypozycz = ?");
             wypozyczenieksiazki = conn.prepareStatement(
+                    //"insert into wypozyczenia (id_czytelnika, id_ksiazki) values ( ?, ?);");
                     "INSERT INTO wypozyczenia (id_czytelnika, id_ksiazki) VALUES  (?,?);");
                      //"insert into wypozyczenia values (NULL, ?, ?);");
-            
+            usunWypozyczenieKS = conn.prepareStatement(
+                    "DELETE FROM wypozyczenia WHERE id_wypozycz = ?;");
             
         } catch (ClassNotFoundException e) {
             System.err.println("Brak sterownika JDBC");
@@ -118,6 +121,17 @@ public class DataBaseController {
         }
     return true;
     }
+    public void usunWypozyczenieKS(Wypozyczenie wypozyczenie) {
+        try {
+
+            usunWypozyczenieKS.setInt(1, wypozyczenie.getId_wypozyczenia());
+            usunWypozyczenieKS.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Blad przy usuwaniu książki");
+        }
+
+    }
+    
 
     public void insertKsiazka(Book ksiazka) {
         try {
