@@ -5,6 +5,7 @@
  */
 package view;
 
+import controller.AlertBox;
 import controller.DataBaseController;
 import controller.Logic;
 import java.util.List;
@@ -28,48 +29,48 @@ import model.Book;
  * @author KrzysieK
  */
 public class ManageBooks extends Tab {
-
+    
     TextField bookNameTextField, wydawnictwoNameTextField, bookIssueDateTextField, bookAuthorTextField, bookISBNTextField;
     TableView tabelaBook;
     DataBaseController dataBase;
-
+    
     public ManageBooks(String tekst) {
         setText(tekst);
         createContent();
         dataBase = new DataBaseController();
     }
-
+    
     private void createContent() {
         Label bookName = new Label("Tytł:");
         Label wydawnictwoName = new Label("Wydawnictwo:");
         Label bookIssueDate = new Label("Rok wydania:");
         Label bookAuthor = new Label("Autor:");
         Label bookISBN = new Label("ISBN:");
-
+        
         bookNameTextField = new TextField();
         wydawnictwoNameTextField = new TextField();
         bookIssueDateTextField = new TextField();
         bookAuthorTextField = new TextField();
         bookISBNTextField = new TextField();
-
+        
         Button bookSzukajBtn = new Button("Szukaj");
         Button bookDodajBtn = new Button("Dodaj");
         Button bookUsunBtn = new Button("Usuń");
         Button bookClearBtn = new Button("Wyczyść");
         Button chooseBookButton = new Button("Wybierz książkę");
-
+        
         bookSzukajBtn.setOnAction(event -> new ButtonActions().szukaj());
         bookDodajBtn.setOnAction(event -> new ButtonActions().dodaj());
         bookClearBtn.setOnAction(event -> new ButtonActions().clear());
         bookUsunBtn.setOnAction(event -> new ButtonActions().usun());
         chooseBookButton.setOnAction(event -> new ButtonActions().wybierz());
-
+        
         VBox uklad = new VBox(8);
         uklad.setPadding(new Insets(10, 10, 10, 10));
-
+        
         Text sceneTitle = new Text("Dane Książki");
         sceneTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-
+        
         HBox poziomePrzyciski = new HBox();
         poziomePrzyciski.setSpacing(10);
         poziomePrzyciski.setAlignment(Pos.CENTER);
@@ -79,7 +80,7 @@ public class ManageBooks extends Tab {
                 bookClearBtn,
                 chooseBookButton
         );
-
+        
         GridPane siatka = new GridPane();
         siatka.setAlignment(Pos.CENTER);
         siatka.setHgap(10);
@@ -95,7 +96,7 @@ public class ManageBooks extends Tab {
         siatka.add(bookIssueDate, 1, 4);
         siatka.add(bookIssueDateTextField, 1, 5);
         siatka.add(poziomePrzyciski, 2, 5);
-
+        
         uklad.getChildren().addAll(sceneTitle,
                 siatka,
                 tabelaBook = new BookTableView(),
@@ -103,7 +104,7 @@ public class ManageBooks extends Tab {
         );
         this.setContent(uklad);
     }
-
+    
     private Book newBook() {
         return new Book(
                 bookNameTextField.getText(),
@@ -113,9 +114,9 @@ public class ManageBooks extends Tab {
                 bookIssueDateTextField.getText()
         );
     }
-
+    
     class ButtonActions {
-
+        
         private void clear() {
             bookNameTextField.clear();
             wydawnictwoNameTextField.clear();
@@ -123,8 +124,9 @@ public class ManageBooks extends Tab {
             bookAuthorTextField.clear();
             bookISBNTextField.clear();
             tabelaBook.getSelectionModel().clearSelection();
+            szukaj();
         }
-
+        
         private void dodaj() {
             if (!bookNameTextField.getText().isEmpty()
                     && !bookAuthorTextField.getText().isEmpty()
@@ -134,11 +136,13 @@ public class ManageBooks extends Tab {
                 tabelaBook.getItems().add(newBook());
                 dataBase.insertKsiazka(newBook());
                 clear();
+                new AlertBox().informacja("została dodana książka");
+            } else {
+                new AlertBox().blad("Nie wypełniono wszystkich pól");
             }
         }
-
+        
         private void szukaj() {
-
             Logic logic = new Logic();
             List<Book> ksiazki = logic.selectKsiazki(newBook());
             tabelaBook.getItems().clear();
@@ -146,20 +150,27 @@ public class ManageBooks extends Tab {
                 tabelaBook.getItems().add(ksiazka);
             }
         }
-
+        
         private void usun() {
             if (tabelaBook.getSelectionModel().getSelectedIndex() >= 0) {
                 Book selectedBook = (Book) tabelaBook.getSelectionModel().getSelectedItem();
-
                 dataBase.usunKsiazka(selectedBook);
                 tabelaBook.getItems().remove(selectedBook);
+                clear();
+                new AlertBox().informacja("została usunięta książka: \n"
+                        + selectedBook.getBookAuthor()
+                        + " "
+                        + selectedBook.getBookTitle());
+            } else {
+                new AlertBox().informacja("Zaznacz książkę na liście do usunięcia z bazy");
             }
-            clear();
+            
         }
-
+        
         private void wybierz() {
             if (tabelaBook.getSelectionModel().getSelectedIndex() >= 0) {
                 View.chosenBook = (Book) tabelaBook.getSelectionModel().getSelectedItem();
+                View.tabPane.getSelectionModel().selectNext();
             }
         }
     }

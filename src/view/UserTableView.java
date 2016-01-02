@@ -24,19 +24,22 @@ public class UserTableView extends TableView {
         this.setEditable(true);
 
         TableColumn nameCol = new TableColumn("Imię");
+        nameCol.setMinWidth(150);
         nameCol.setCellValueFactory(
                 new PropertyValueFactory<>("imie"));
 
         TableColumn lastNameCol = new TableColumn("Nazwisko");
+        lastNameCol.setMinWidth(150);
         lastNameCol.setCellValueFactory(
                 new PropertyValueFactory<>("nazwisko"));
 
         TableColumn peselCol = new TableColumn("PESEL");
-        peselCol.setMaxWidth(100);
+        peselCol.setMinWidth(160);
         peselCol.setCellValueFactory(
                 new PropertyValueFactory<>("pesel"));
 
         TableColumn miastoCol = new TableColumn("Miasto");
+        miastoCol.setMinWidth(100);
         miastoCol.setCellValueFactory(
                 new PropertyValueFactory<>("miasto"));
 

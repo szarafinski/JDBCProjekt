@@ -24,10 +24,13 @@ public class UsersBooksTableView extends TableView {
         this.setEditable(true);
 
         TableColumn userBookNameCol = new TableColumn("Imię");
+        userBookNameCol.setMinWidth(120);
         TableColumn userBookAuthorCol = new TableColumn("Autor");
+        userBookAuthorCol.setMinWidth(150);
         TableColumn userBookLastNameCol = new TableColumn("Nazwisko");
+        userBookLastNameCol.setMinWidth(120);
         TableColumn userBookTitleCol = new TableColumn("Tytuł");
-        userBookTitleCol.setMinWidth(200);
+        userBookTitleCol.setMinWidth(250);
         TableColumn userIDWypozyczeniaCol = new TableColumn("Wypożyczeni Nr");
 
         userBookNameCol.setCellValueFactory(

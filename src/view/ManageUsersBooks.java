@@ -5,6 +5,7 @@
  */
 package view;
 
+import controller.AlertBox;
 import controller.DataBaseController;
 import java.util.List;
 import javafx.geometry.Insets;
@@ -25,8 +26,8 @@ import model.Wypozyczenie;
  * @author KrzysieK
  */
 public class ManageUsersBooks extends Tab {
-    
-public TableView tableUserBooks;
+
+    public TableView tableUserBooks;
 
     public ManageUsersBooks(String tekst) {
         this.setText(tekst);
@@ -73,41 +74,47 @@ public TableView tableUserBooks;
     }
 
     class ButtonActions {
-        private void wypozyczone(){
-            tableUserBooks.getItems().clear();
-                
-                DataBaseController db = new DataBaseController();
-                List<Wypozyczenie> wypozyczone = db.selectWszszystkieKsiazkiCzytelnikow();
-                
 
-                    for (Wypozyczenie wypozyczenie : wypozyczone) {
-                        tableUserBooks.getItems().add(wypozyczenie);
-                        
-                
-                }
+        private void wypozyczone() {
+            tableUserBooks.getItems().clear();
+            DataBaseController db = new DataBaseController();
+            List<Wypozyczenie> wypozyczone = db.selectWszszystkieKsiazkiCzytelnikow();
+            for (Wypozyczenie wypozyczenie : wypozyczone) {
+                tableUserBooks.getItems().add(wypozyczenie);
+            }
         }
-        private void usun(){
-             if (tableUserBooks.getSelectionModel().getSelectedIndex() >= 0) {
-                    Wypozyczenie selectedBook = (Wypozyczenie) tableUserBooks.getSelectionModel().getSelectedItem();
-                    
-                    DataBaseController db = new DataBaseController();
-                    db.usunWypozyczenie(selectedBook);
-                    tableUserBooks.getItems().remove(selectedBook);
-//
-//                    komunikat.setText("Została usunięta ksiazka o parametrach: \n"
-//                            + selectedBook.toString());
-//                    newStage.showAndWait();
-                }
+
+        private void usun() {
+            if (tableUserBooks.getSelectionModel().getSelectedIndex() >= 0) {
+                Wypozyczenie selectedBook = (Wypozyczenie) tableUserBooks.getSelectionModel().getSelectedItem();
+                DataBaseController db = new DataBaseController();
+                db.usunWypozyczenie(selectedBook);
+                tableUserBooks.getItems().remove(selectedBook);
                 tableUserBooks.getSelectionModel().clearSelection();
+                new AlertBox().informacja("Została usunięta ksiazka: \n"
+                        + selectedBook.getAutor()
+                        + " "
+                        + selectedBook.getTytul());
+            } else {
+                new AlertBox().informacja("Zaznacz pozycję na liście do usunięcia z bazy");
+            }
+
         }
-        private void addLendFact(){
+
+        private void addLendFact() {
             if (View.chosenUser != null && View.chosenBook != null) {
-                    DataBaseController db = new DataBaseController();
-                    db.insertWypozyczenieKS(View.chosenUser.getidentyfikator(), View.chosenBook.getBookID());
-                }
-            View.dataUserBooks.clear();
-            wypozyczone();
+                DataBaseController db = new DataBaseController();
+                db.insertWypozyczenieKS(View.chosenUser.getidentyfikator(), View.chosenBook.getBookID());
+
+                View.chosenBook = null;
+                View.chosenUser = null;
+                View.dataUserBooks.clear();
+                wypozyczone();
+                new AlertBox().informacja("Dodano nowe wypożyczenie");
+            } else
+            {
+                new AlertBox().blad("nie wybrano wcześniej użytkownika lub książki");
+            }
         }
     }
 }
-

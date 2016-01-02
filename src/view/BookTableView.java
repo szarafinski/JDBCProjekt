@@ -29,6 +29,7 @@ public class BookTableView extends TableView {
                 new PropertyValueFactory<>("bookTitle"));
 
         TableColumn bookAuthorCol = new TableColumn("Autor");
+        bookAuthorCol.setMinWidth(150);
         bookAuthorCol.setCellValueFactory(
                 new PropertyValueFactory<>("bookAuthor"));
 
