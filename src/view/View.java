@@ -18,15 +18,13 @@ import model.User;
  */
 public final class View {
 
-
     static ObservableList dataUserBooks;
     BorderPane border, border2, border3;
     Scene scene, scene2, popup, popup2;
     Stage stage, newStage, newStage2;
-    TabPane tabPane;
+    static TabPane tabPane = new TabPane();
     Tab ManageUsers, ManageBooks, ManageUsersBooks;
-    
-    
+
     static User chosenUser;
     static Book chosenBook;
 
@@ -63,7 +61,6 @@ public final class View {
     }
 
     private TabPane createTabPane() {
-        tabPane = new TabPane();
         tabPane.getTabs().addAll(
                 ManageUsers = new ManageUsers("Zarzadzanie Czytelnikami"),
                 ManageBooks = new ManageBooks("Zarządzanie Książkami"),
@@ -72,7 +69,5 @@ public final class View {
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         return tabPane;
     }
-
-    
 
 }

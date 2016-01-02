@@ -126,9 +126,15 @@ public class ManageBooks extends Tab {
         }
 
         private void dodaj() {
-            tabelaBook.getItems().add(newBook());
-            dataBase.insertKsiazka(newBook());
-            clear();
+            if (!bookNameTextField.getText().isEmpty()
+                    && !bookAuthorTextField.getText().isEmpty()
+                    && !bookISBNTextField.getText().isEmpty()
+                    && !wydawnictwoNameTextField.getText().isEmpty()
+                    && !bookIssueDateTextField.getText().isEmpty()) {
+                tabelaBook.getItems().add(newBook());
+                dataBase.insertKsiazka(newBook());
+                clear();
+            }
         }
 
         private void szukaj() {

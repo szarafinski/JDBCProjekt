@@ -7,6 +7,7 @@ package view;
 
 import controller.DataBaseController;
 import controller.Logic;
+import controller.PESELvalidation;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -152,13 +153,21 @@ public class ManageUsers extends Tab {
         }
 
         private void dodaj() {
-            DataBaseController db = new DataBaseController();
+            if (!userNameTextField.getText().isEmpty()
+                    && !userLastNameTextField.getText().isEmpty()
+                    && !userPESELTextField.getText().isEmpty()
+                    && !userTownTextField.getText().isEmpty()
+                    && !userStrTextField.getText().isEmpty()) {
+                if (new PESELvalidation(userPESELTextField.getText()).isValid()) {
+                    DataBaseController db = new DataBaseController();
 
-            tableUser.getItems().add(newUser());
-            db.insertCzytelnik(newUser());
-            wyczysc();
+                    tableUser.getItems().add(newUser());
+                    db.insertCzytelnik(newUser());
+                    wyczysc();
 //            komunikat.setText("został dodany użytkownik");
 //            newStage.showAndWait();
+                }
+            }
         }
 
         private void pokaz() {
@@ -172,6 +181,7 @@ public class ManageUsers extends Tab {
                     View.dataUserBooks.add(wypozyczoneWszystkieKsiazki);
 
                 }
+                View.tabPane.getSelectionModel().selectLast();
 //                    if (usersBooks.getItems().isEmpty()) {
 //                        komunikat.setText("Brak wypożyczonych książek przez użytkownika");
 //                    } else {
@@ -182,11 +192,13 @@ public class ManageUsers extends Tab {
 //                    newStage.showAndWait();
             }
             tableUser.getSelectionModel().clearSelection();
+
         }
-        private void wybierz(){
+
+        private void wybierz() {
             if (tableUser.getSelectionModel().getSelectedIndex() >= 0) {
-                    View.chosenUser = (User) tableUser.getSelectionModel().getSelectedItem();
-                }
+                View.chosenUser = (User) tableUser.getSelectionModel().getSelectedItem();
+            }
         }
     }
 }
