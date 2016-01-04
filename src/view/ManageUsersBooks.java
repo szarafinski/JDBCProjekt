@@ -74,15 +74,11 @@ public class ManageUsersBooks extends Tab {
     }
 
     class ButtonActions {
-        DataBaseController dataBaseController;
-
-        public ButtonActions() {
-            dataBaseController = new DataBaseController();
-        }
 
         private void wypozyczone() {
             tableUserBooks.getItems().clear();
-            List<Wypozyczenie> wypozyczone = dataBaseController.selectWszszystkieKsiazkiCzytelnikow();
+            DataBaseController db = new DataBaseController();
+            List<Wypozyczenie> wypozyczone = db.selectWszszystkieKsiazkiCzytelnikow();
             for (Wypozyczenie wypozyczenie : wypozyczone) {
                 tableUserBooks.getItems().add(wypozyczenie);
             }
@@ -91,7 +87,8 @@ public class ManageUsersBooks extends Tab {
         private void usun() {
             if (tableUserBooks.getSelectionModel().getSelectedIndex() >= 0) {
                 Wypozyczenie selectedBook = (Wypozyczenie) tableUserBooks.getSelectionModel().getSelectedItem();
-                dataBaseController.usunWypozyczenie(selectedBook);
+                DataBaseController db = new DataBaseController();
+                db.usunWypozyczenie(selectedBook);
                 tableUserBooks.getItems().remove(selectedBook);
                 tableUserBooks.getSelectionModel().clearSelection();
                 new AlertBox().informacja("Została usunięta ksiazka: \n"
@@ -106,7 +103,8 @@ public class ManageUsersBooks extends Tab {
 
         private void addLendFact() {
             if (View.chosenUser != null && View.chosenBook != null) {
-                dataBaseController.insertWypozyczenieKS(View.chosenUser.getidentyfikator(), View.chosenBook.getBookID());
+                DataBaseController db = new DataBaseController();
+                db.insertWypozyczenieKS(View.chosenUser.getidentyfikator(), View.chosenBook.getBookID());
 
                 View.chosenBook = null;
                 View.chosenUser = null;
