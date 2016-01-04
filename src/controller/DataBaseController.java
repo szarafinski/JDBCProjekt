@@ -58,16 +58,16 @@ public class DataBaseController {
                     "DELETE FROM wypozyczenia WHERE id_wypozycz = ?;");
             
         } catch (ClassNotFoundException e) {
-            System.err.println("Brak sterownika JDBC");
+            new AlertBox().blad("Brak sterownika JDBC");
         } catch (SQLException e) {
-            System.err.println("Problem z otwarciem polaczenia");
+            new AlertBox().blad("Problem z otwarciem polaczenia");
         }
         dataBaseInitiator();
     }
 
-    public DataBaseController(int i, int i0) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    public DataBaseController(int i, int i0) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 
     private void dataBaseInitiator() {
         try {
@@ -91,7 +91,7 @@ public class DataBaseController {
             createKsiazki.execute();
             createCzytelnicy.execute();
         } catch (SQLException e) {
-            System.err.println("Blad przy tworzeniu tabeli");
+            new AlertBox().blad("Blad przy tworzeniu tabeli");
         }
     }
 
@@ -104,7 +104,7 @@ public class DataBaseController {
             czytelnicyInstertPS.setString(5, czytelnik.getUlica());
             czytelnicyInstertPS.execute();
         } catch (SQLException e) {
-            System.err.println("Błąd przy wstawianiu czytelnika");
+            new AlertBox().blad("Błąd przy wstawianiu czytelnika");
         }
 
     }
@@ -116,7 +116,7 @@ public class DataBaseController {
            wypozyczenieksiazki.execute();
         }
         catch (SQLException e){
-            System.err.println("Błąd przy wypozyczaniu ksiazki");
+            new AlertBox().blad("Błąd przy wypozyczaniu ksiazki");
             return false;
         }
     return true;
@@ -127,7 +127,7 @@ public class DataBaseController {
             usunWypozyczenieKS.setInt(1, wypozyczenie.getId_wypozyczenia());
             usunWypozyczenieKS.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Blad przy usuwaniu książki");
+            new AlertBox().blad("Blad przy usuwaniu książki");
         }
 
     }
@@ -144,7 +144,7 @@ public class DataBaseController {
             ksiazkiInsertPS.addBatch();
             ksiazkiInsertPS.executeBatch();
         } catch (SQLException e) {
-            System.err.println("Blad przy wstawianiu książki");
+            new AlertBox().blad("Blad przy wstawianiu książki");
         }
     }
 
@@ -164,7 +164,7 @@ public class DataBaseController {
                 czytelnicy.add(new User(id, imie, nazwisko, pesel, miasto, ulica));
             }
         } catch (SQLException e) {
-            System.err.println("Blad przy wybieraniu Czytelników");
+            new AlertBox().blad("Blad przy wybieraniu Czytelników");
         }
         return czytelnicy;
     }
@@ -185,7 +185,7 @@ public class DataBaseController {
                 ksiazki.add(new Book(tytul, autor, isbn, id, wydawnictwo, rok_wydania));
             }
         } catch (SQLException e) {
-            System.err.println("Blad przy wybieraniu Książek");
+            new AlertBox().blad("Blad przy wybieraniu Książek");
         }
         return ksiazki;
 
@@ -215,7 +215,7 @@ public class DataBaseController {
             }
 
         } catch (SQLException e) {
-            System.err.println("Blad przy wybieraniu wypożyczonych Książek");
+            new AlertBox().blad("Blad przy wybieraniu wypożyczonych Książek");
         }
         return wypozyczone;
 
@@ -244,7 +244,7 @@ public class DataBaseController {
             }
 
         } catch (SQLException e) {
-            System.err.println("Blad przy wybieraniu wypożyczonych Książek");
+            new AlertBox().blad("Blad przy wybieraniu wypożyczonych Książek");
         }
         return wypozyczone;
 
@@ -257,7 +257,7 @@ public class DataBaseController {
             usunCzytelnikPS.addBatch();
             usunCzytelnikPS.executeBatch();
         } catch (SQLException e) {
-            System.err.println("Blad przy usuwaniu czytelnika");
+            new AlertBox().blad("Blad przy usuwaniu czytelnika");
         }
 
     }
@@ -269,7 +269,7 @@ public class DataBaseController {
             usunKsiazkaPS.addBatch();
             usunKsiazkaPS.executeBatch();
         } catch (SQLException e) {
-            System.err.println("Blad przy usuwaniu książki");
+            new AlertBox().blad("Blad przy usuwaniu książki");
         }
 
     }
@@ -281,7 +281,7 @@ public class DataBaseController {
             usunWypozyczeniePS.addBatch();
             usunWypozyczeniePS.executeBatch();
         } catch (SQLException e) {
-            System.err.println("Blad przy usuwaniu książki");
+            new AlertBox().blad("Blad przy usuwaniu książki");
         }
 
     }
@@ -305,7 +305,7 @@ public class DataBaseController {
         try {
             conn.close();
         } catch (SQLException e) {
-            System.err.println("Problem z zamknieciem polaczenia");
+            new AlertBox().blad("Problem z zamknieciem polaczenia");
         }
     }
 }

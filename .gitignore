@@ -3,3 +3,5 @@
 /build/
 *.db
 /dist/
+/JavaFX8/nbproject/private/
+/JavaFX8/build/

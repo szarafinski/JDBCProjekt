@@ -82,7 +82,7 @@ public class ManageUsers extends Tab {
                 userDodajBtn,
                 userClearBtn
         );
-        
+
         HBox poziomePrzyciski2 = new HBox();
         poziomePrzyciski2.setSpacing(10);
         poziomePrzyciski2.setAlignment(Pos.CENTER);
@@ -119,6 +119,12 @@ public class ManageUsers extends Tab {
 
     class ButtonActions {
 
+        DataBaseController dataBaseController;
+
+        public ButtonActions() {
+            dataBaseController = new DataBaseController();
+        }
+
         private User newUser() {
             return new User(
                     userNameTextField.getText(),
@@ -151,9 +157,7 @@ public class ManageUsers extends Tab {
         private void usun() {
             if (tableUser.getSelectionModel().getSelectedIndex() >= 0) {
                 User selectedUser = (User) tableUser.getSelectionModel().getSelectedItem();
-
-                DataBaseController db = new DataBaseController();
-                db.usunCzytelnik(selectedUser);
+                dataBaseController.usunCzytelnik(selectedUser);
                 tableUser.getItems().remove(selectedUser);
                 wyczysc();
                 new AlertBox().alert("został usunięty użytkownik: \n"
@@ -163,7 +167,7 @@ public class ManageUsers extends Tab {
             } else {
                 new AlertBox().informacja("Zaznacz czytelnika na liście do usunięcia z bazy");
             }
-            
+
         }
 
         private void dodaj() {
@@ -173,10 +177,9 @@ public class ManageUsers extends Tab {
                     && !userTownTextField.getText().isEmpty()
                     && !userStrTextField.getText().isEmpty()) {
                 if (new PESELvalidation(userPESELTextField.getText()).isValid()) {
-                    DataBaseController db = new DataBaseController();
 
                     tableUser.getItems().add(newUser());
-                    db.insertCzytelnik(newUser());
+                    dataBaseController.insertCzytelnik(newUser());
                     wyczysc();
                     new AlertBox().alert("został dodany użytkownik");
                 } else {
@@ -190,9 +193,7 @@ public class ManageUsers extends Tab {
         private void pokaz() {
             if (tableUser.getSelectionModel().getSelectedIndex() >= 0) {
                 User selectedUser = (User) tableUser.getSelectionModel().getSelectedItem();
-
-                DataBaseController db = new DataBaseController();
-                List<Wypozyczenie> wypozyczone = db.selectKsiazkiCzytelnika(selectedUser);
+                List<Wypozyczenie> wypozyczone = dataBaseController.selectKsiazkiCzytelnika(selectedUser);
                 View.dataUserBooks.clear();
                 for (Wypozyczenie wypozyczoneWszystkieKsiazki : wypozyczone) {
                     View.dataUserBooks.add(wypozyczoneWszystkieKsiazki);
