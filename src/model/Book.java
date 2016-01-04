@@ -16,25 +16,22 @@ public class Book {
     private final SimpleIntegerProperty bookID;
     private final SimpleStringProperty bookWydawnictwo;
     private final SimpleStringProperty bookRokWydania;
-    private final SimpleStringProperty bookStan;
 
-    public Book(String bookTitle, String bookAuthor, String bookISBN, int bookID, String bookWydawnictwo, String bookRokWydania, String bookStan) {
+    public Book(String bookTitle, String bookAuthor, String bookISBN, int bookID, String bookWydawnictwo, String bookRokWydania) {
         this.bookTitle = new SimpleStringProperty(bookTitle);
         this.bookAuthor = new SimpleStringProperty(bookAuthor);
         this.bookISBN = new SimpleStringProperty(bookISBN);
         this.bookID = new SimpleIntegerProperty(bookID);
         this.bookWydawnictwo = new SimpleStringProperty(bookWydawnictwo);
         this.bookRokWydania = new SimpleStringProperty(bookRokWydania);
-        this.bookStan = new SimpleStringProperty(bookStan);
     }
-    public Book(String bookTitle, String bookAuthor, String bookISBN, String bookWydawnictwo, String bookRokWydania, String bookStan) {
+    public Book(String bookTitle, String bookAuthor, String bookISBN, String bookWydawnictwo, String bookRokWydania) {
         this.bookTitle = new SimpleStringProperty(bookTitle);
         this.bookAuthor = new SimpleStringProperty(bookAuthor);
         this.bookISBN = new SimpleStringProperty(bookISBN);
         this.bookID = new SimpleIntegerProperty();
         this.bookWydawnictwo = new SimpleStringProperty(bookWydawnictwo);
         this.bookRokWydania = new SimpleStringProperty(bookRokWydania);
-        this.bookStan = new SimpleStringProperty(bookStan);
     }
 
     public String getBookTitle() {
@@ -60,15 +57,6 @@ public class Book {
     public String getBookRokWydania() {
         return bookRokWydania.get();
     }
-    
-    public String getBookStan(){
-        return bookStan.get();
-    }
-    
-    public void getBookStan(String s){
-        bookStan.set(s);
-    }
-    
       public void setBookTitle(String s) {
          bookTitle.set(s);
     }

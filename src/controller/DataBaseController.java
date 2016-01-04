@@ -43,7 +43,7 @@ public class DataBaseController {
             czytelnicyInstertPS = conn.prepareStatement(
                     "INSERT INTO czytelnicy VALUES (NULL, ?, ?, ?, ?, ?);");
             ksiazkiInsertPS = conn.prepareStatement(
-                    "INSERT INTO ksiazki VALUES (NULL, ?, ?, ?, ?, ?, ?);");
+                    "INSERT INTO ksiazki VALUES (NULL, ?, ?, ?, ?, ?);");
             usunCzytelnikPS = conn.prepareStatement(
                     "DELETE FROM czytelnicy WHERE id_czytelnika = ?");
             usunKsiazkaPS = conn.prepareStatement(
@@ -52,7 +52,7 @@ public class DataBaseController {
                     "DELETE FROM wypozyczenia WHERE id_wypozycz = ?");
             wypozyczenieksiazki = conn.prepareStatement(
                     //"insert into wypozyczenia (id_czytelnika, id_ksiazki) values ( ?, ?);");
-                    "INSERT INTO wypozyczenia (id_czytelnika, id_ksiazki, status) VALUES  (?,?,'Nie oddana');");
+                    "INSERT INTO wypozyczenia (id_czytelnika, id_ksiazki) VALUES  (?,?);");
                      //"insert into wypozyczenia values (NULL, ?, ?);");
             usunWypozyczenieKS = conn.prepareStatement(
                     "DELETE FROM wypozyczenia WHERE id_wypozycz = ?;");
@@ -73,13 +73,13 @@ public class DataBaseController {
         try {
         PreparedStatement createWypozyczenia = conn.prepareStatement("CREATE TABLE IF NOT EXISTS wypozyczenia ("
                 + "id_wypozycz INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "id_czytelnika int, id_ksiazki int, status STRING)");
+                + "id_czytelnika int, id_ksiazki int)");
         PreparedStatement createKsiazki = conn.prepareStatement( "CREATE TABLE IF NOT EXISTS ksiazki ("
                 + "id_ksiazki INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "tytul STRING, autor STRING"
                 + ", wydawnictwo STRING, "
                 + "isbn STRING, "
-                + "rok_wydania STRING, stan int);");
+                + "rok_wydania STRING);");
         PreparedStatement createCzytelnicy = conn.prepareStatement( "CREATE TABLE IF NOT EXISTS czytelnicy ("
                 + "id_czytelnika INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "imie STRING, nazwisko STRING, "
@@ -111,22 +111,9 @@ public class DataBaseController {
     
     public  boolean insertWypozyczenieKS(int id_czytelnika, int id_ksiazki){
         try{
-           result = stat.executeQuery(
-                    "select stan\n" +
-                    "from ksiazki\n" +
-                    "where id_ksiazki="+ id_ksiazki+";"
-            );
-            int stan = result.getInt("stan");
-            if(stan > 0){
-                stat.executeUpdate(
-                        "update ksiazki set stan=stan-1 where id_ksiazki="+id_ksiazki+";"
-                );
-                wypozyczenieksiazki.setInt(1, id_czytelnika);
-                wypozyczenieksiazki.setInt(2, id_ksiazki);
-                wypozyczenieksiazki.execute();
-            } else {
-                System.out.println("insertWypozyczenieKS: BRAK EGZEMPLARZY NA STANIE");
-            }
+           wypozyczenieksiazki.setInt(1, id_czytelnika);
+           wypozyczenieksiazki.setInt(2, id_ksiazki);
+           wypozyczenieksiazki.execute();
         }
         catch (SQLException e){
             System.err.println("Błąd przy wypozyczaniu ksiazki");
@@ -134,36 +121,11 @@ public class DataBaseController {
         }
     return true;
     }
-    
     public void usunWypozyczenieKS(Wypozyczenie wypozyczenie) {
         try {
-            result = stat.executeQuery(
-                    "select id_ksiazki, status\n" +
-                    "from wypozyczenia\n" +
-                    "where id_wypozycz="+ wypozyczenie.getId_wypozyczenia()+";"
-            );
-            int idKsiazki = result.getInt("id_ksiazki");
-            String status = result.getString("status");
-            if(!status.equals("zwrocona")){
-                stat.executeUpdate(
-                        "update ksiazki set stan=stan+1 where id_ksiazki="+idKsiazki+";"
-                );
-                stat.executeUpdate(
-                        "update wypozyczenia set status='zwrocona' where id_wypozycz="+wypozyczenie.getId_wypozyczenia()+";"
-                );
-            }
-        } catch (SQLException e) {
-            System.err.println("usunWypozyczenieKS: Blad przy usuwaniu książki");
-        }
 
-    }
-    
-    public void usunWypozyczenie(Wypozyczenie wypozyczenie) {
-        try {
-
-            usunWypozyczeniePS.setInt(1, wypozyczenie.getId_wypozyczenia());
-            usunWypozyczeniePS.addBatch();
-            usunWypozyczeniePS.executeBatch();
+            usunWypozyczenieKS.setInt(1, wypozyczenie.getId_wypozyczenia());
+            usunWypozyczenieKS.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Blad przy usuwaniu książki");
         }
@@ -179,7 +141,6 @@ public class DataBaseController {
             ksiazkiInsertPS.setString(3, ksiazka.getBookWydawnictwo());
             ksiazkiInsertPS.setString(4, ksiazka.getBookISBN());
             ksiazkiInsertPS.setString(5, ksiazka.getBookRokWydania());
-            ksiazkiInsertPS.setString(6, ksiazka.getBookStan());
             ksiazkiInsertPS.addBatch();
             ksiazkiInsertPS.executeBatch();
         } catch (SQLException e) {
@@ -213,7 +174,7 @@ public class DataBaseController {
         try {
             result = stat.executeQuery(command);
             int id;
-            String tytul, autor, wydawnictwo, isbn, rok_wydania,stan;
+            String tytul, autor, wydawnictwo, isbn, rok_wydania;
             while (result.next()) {
                 id = result.getInt("id_ksiazki");
                 tytul = result.getString("tytul");
@@ -221,8 +182,7 @@ public class DataBaseController {
                 isbn = result.getString("isbn");
                 rok_wydania = result.getString("rok_wydania");
                 wydawnictwo = result.getString("wydawnictwo");
-                stan = result.getString("stan");
-                ksiazki.add(new Book(tytul, autor, isbn, id, wydawnictwo, rok_wydania,stan));
+                ksiazki.add(new Book(tytul, autor, isbn, id, wydawnictwo, rok_wydania));
             }
         } catch (SQLException e) {
             System.err.println("Blad przy wybieraniu Książek");
@@ -235,20 +195,23 @@ public class DataBaseController {
         List<Wypozyczenie> wypozyczone = new LinkedList<>();
         try {
             result = stat.executeQuery(
-                    "select wypozyczenia.id_wypozycz, czytelnicy.imie, czytelnicy.nazwisko,  ksiazki.tytul, ksiazki.autor, wypozyczenia.status\n" +
-                    "from wypozyczenia join czytelnicy on wypozyczenia.id_czytelnika=czytelnicy.id_czytelnika join ksiazki on wypozyczenia.id_ksiazki=ksiazki.id_ksiazki\n" +
-                    "where czytelnicy.id_czytelnika="+ czytelnik.getidentyfikator() +";"
+                    "select wypozyczenia.id_wypozycz, czytelnicy.imie, czytelnicy.nazwisko,  ksiazki.tytul, ksiazki.autor\n"
+                    + "from wypozyczenia \n"
+                    + "join czytelnicy on\n"
+                    + "wypozyczenia.id_czytelnika=czytelnicy.id_czytelnika\n"
+                    + "join ksiazki on\n"
+                    + "wypozyczenia.id_ksiazki=ksiazki.id_ksiazki\n"
+                    + "where czytelnicy.id_czytelnika='" + czytelnik.getidentyfikator() + "'"
             );
             int id;
-            String tytul, autor, imie, nazwisko,status;
+            String tytul, autor, imie, nazwisko;
             while (result.next()) {
                 id = result.getInt("id_wypozycz");
                 tytul = result.getString("tytul");
                 autor = result.getString("autor");
                 imie = result.getString("imie");
                 nazwisko = result.getString("nazwisko");
-                status = result.getString("status");
-                wypozyczone.add(new Wypozyczenie(imie, nazwisko, tytul, autor, id, status));
+                wypozyczone.add(new Wypozyczenie(imie, nazwisko, tytul, autor, id));
             }
 
         } catch (SQLException e) {
@@ -262,7 +225,7 @@ public class DataBaseController {
         List<Wypozyczenie> wypozyczone = new LinkedList<>();
         try {
             result = stat.executeQuery(
-                    "select wypozyczenia.id_wypozycz, czytelnicy.imie, czytelnicy.nazwisko,  ksiazki.tytul, ksiazki.autor, wypozyczenia.status\n"
+                    "select wypozyczenia.id_wypozycz, czytelnicy.imie, czytelnicy.nazwisko,  ksiazki.tytul, ksiazki.autor\n"
                     + "from wypozyczenia \n"
                     + "join czytelnicy on\n"
                     + "wypozyczenia.id_czytelnika=czytelnicy.id_czytelnika\n"
@@ -270,15 +233,14 @@ public class DataBaseController {
                     + "wypozyczenia.id_ksiazki=ksiazki.id_ksiazki\n"
             );
             int id;
-            String tytul, autor, imie, nazwisko,status;
+            String tytul, autor, imie, nazwisko;
             while (result.next()) {
                 id = result.getInt("id_wypozycz");
                 tytul = result.getString("tytul");
                 autor = result.getString("autor");
                 imie = result.getString("imie");
                 nazwisko = result.getString("nazwisko");
-                status = result.getString("status");
-                wypozyczone.add(new Wypozyczenie(imie, nazwisko, tytul, autor, id,status));
+                wypozyczone.add(new Wypozyczenie(imie, nazwisko, tytul, autor, id));
             }
 
         } catch (SQLException e) {
@@ -311,7 +273,34 @@ public class DataBaseController {
         }
 
     }
+
+    public void usunWypozyczenie(Wypozyczenie wypozyczenie) {
+        try {
+
+            usunWypozyczeniePS.setInt(1, wypozyczenie.getId_wypozyczenia());
+            usunWypozyczeniePS.addBatch();
+            usunWypozyczeniePS.executeBatch();
+        } catch (SQLException e) {
+            System.err.println("Blad przy usuwaniu książki");
+        }
+
+    }
     
+    
+
+//    public void zamien(String baza, String poleZmieniane, String nowaWartosc, String poleSzukane, String wartoscSzukana) {
+//        try {
+//            String zmienSQL = "UPDATE " + baza + " SET "
+//                    + poleZmieniane + " = '" + nowaWartosc
+//                    + "' WHERE " + poleSzukane + "=='" + wartoscSzukana + "';";
+//
+//            ResultSet wynik = stat.executeQuery(zmienSQL);
+//            System.out.println("Wynik polecenia:\n" + zmienSQL);
+//            wynik.close();
+//        } catch (Exception e) {
+//            System.out.println("Nie mogę poprawić danych " + e.getMessage());
+//        }
+//    }
     public void closeConnection() {
         try {
             conn.close();

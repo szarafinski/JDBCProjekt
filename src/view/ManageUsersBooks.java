@@ -41,8 +41,8 @@ public class ManageUsersBooks extends Tab {
         final Label label = new Label("Address Book");
         label.setFont(new Font("Arial", 20));
 
-        Button usunSelectedLent = new Button("Usun wypozyczenie");
-        usunSelectedLent.setOnAction(event -> new ButtonActions().usun());
+        Button usunUserBookBtn = new Button("Książka oddana przez Czytelnika");
+        usunUserBookBtn.setOnAction(event -> new ButtonActions().usun());
         Button addLendFactButton = new Button("Dodaj wypozyczenie");
         addLendFactButton.setOnAction(event -> new ButtonActions().addLendFact());
         Button wypozyczoneBookBtn = new Button("Wszystkie wypożyczone książki");
@@ -60,18 +60,14 @@ public class ManageUsersBooks extends Tab {
         grid.setAlignment(Pos.CENTER_LEFT);
         grid.setHgap(10);
         grid.setVgap(5);
-//        grid.add(wypozyczoneBookBtn, 0, 1);
-//        grid.add(addLendFactButton, 1, 1);
-        grid.add(addLendFactButton, 0, 1);
-        grid.add(wypozyczoneBookBtn, 1, 1);
-        grid.add(usunSelectedLent, 2, 1);
-
+        grid.add(wypozyczoneBookBtn, 0, 1);
+        grid.add(addLendFactButton, 1, 1);
 
         tabUserBooks.getChildren().addAll(
                 sceneTitle,
                 grid,
                 tableUserBooks,
-                usunSelectedLent
+                usunUserBookBtn
         );
         this.setContent(tabUserBooks);
 
@@ -90,17 +86,17 @@ public class ManageUsersBooks extends Tab {
 
         private void usun() {
             if (tableUserBooks.getSelectionModel().getSelectedIndex() >= 0) {
-                View.chosenLent = (Wypozyczenie) tableUserBooks.getSelectionModel().getSelectedItem();
+                Wypozyczenie selectedBook = (Wypozyczenie) tableUserBooks.getSelectionModel().getSelectedItem();
                 DataBaseController db = new DataBaseController();
-                db.usunWypozyczenieKS(View.chosenLent);
-                //tableUserBooks.getItems().remove(chosenLent);
-                //tableUserBooks.getSelectionModel().clearSelection();
-//                new AlertBox().informacja("Została usunięta ksiazka: \n"
-//                        + selectedBook.getAutor()
-//                        + " "
-//                        + selectedBook.getTytul());
-//            } else {
-//                new AlertBox().informacja("Zaznacz pozycję na liście do usunięcia z bazy");
+                db.usunWypozyczenie(selectedBook);
+                tableUserBooks.getItems().remove(selectedBook);
+                tableUserBooks.getSelectionModel().clearSelection();
+                new AlertBox().informacja("Została usunięta ksiazka: \n"
+                        + selectedBook.getAutor()
+                        + " "
+                        + selectedBook.getTytul());
+            } else {
+                new AlertBox().informacja("Zaznacz pozycję na liście do usunięcia z bazy");
             }
 
         }

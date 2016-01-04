@@ -1,3 +1,0 @@
-select * 
-from (czytelnicy c join wypozyczenia w on c.id_czytelnika=w.id_czytelnika) j
-join ksiazki k on j.id_ksiazki = k.id_ksiazki;
