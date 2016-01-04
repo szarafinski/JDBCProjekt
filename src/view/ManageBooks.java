@@ -129,7 +129,8 @@ public class ManageBooks extends Tab {
             bookAuthorTextField.clear();
             bookISBNTextField.clear();
             tabelaBook.getSelectionModel().clearSelection();
-            szukaj();
+            bookAvailableTextField.clear();
+            //szukaj();
         }
         
         private void dodaj() {

@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/controller/DataBaseController.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/KrzysieK/Documents/NetBeansProjects/JDBCProjekt/src/view/View.java</file>
-            <file>file:/C:/Users/KrzysieK/Documents/NetBeansProjects/JDBCProjekt/src/view/WypozyczenieKsiazki.java</file>
-            <file>file:/C:/Users/KrzysieK/Documents/NetBeansProjects/JDBCProjekt/src/view/UsersBooksTableView.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/view/ManageUsersBooks.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/view/UserTableView.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/controller/DataBaseController.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/controller/ConfirmBox.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/view/ManageUsers.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/view/BookTableView.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/model/Wypozyczenie.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/view/View.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/view/ManageBooks.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/view/UsersBooksTableView.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/controller/Logic.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/controller/Program.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/model/Book.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/controller/PESELvalidation.java</file>
+            <file>file:/D:/priv/szkolaUG/projektZespolowy4.01/JDBCProjekt/src/controller/AlertBox.java</file>
         </group>
     </open-files>
 </project-private>

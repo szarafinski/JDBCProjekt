@@ -1,8 +1,10 @@
 package view;
 
+import controller.ConfirmBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -42,9 +44,12 @@ public final class View {
         border.setCenter(
                 createTabPane()
         );
-        Scene scene = new Scene(border, 800, 600);
+        Scene scene = new Scene(border, 1050, 600);
         stage.setScene(scene);
         stage.setTitle("Aplikacja Biblioteka");
+        
+        
+        
         stage.show();
     }
 

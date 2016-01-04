@@ -41,9 +41,9 @@ public class ManageUsersBooks extends Tab {
         final Label label = new Label("Address Book");
         label.setFont(new Font("Arial", 20));
 
-        Button usunSelectedLent = new Button("Usun wypozyczenie");
+        Button usunSelectedLent = new Button("Zwrot książki");
         usunSelectedLent.setOnAction(event -> new ButtonActions().usun());
-        Button addLendFactButton = new Button("Dodaj wypozyczenie");
+        Button addLendFactButton = new Button("Dodaj wypożyczenie");
         addLendFactButton.setOnAction(event -> new ButtonActions().addLendFact());
         Button wypozyczoneBookBtn = new Button("Wszystkie wypożyczone książki");
         wypozyczoneBookBtn.setOnAction(event -> new ButtonActions().wypozyczone());
@@ -70,8 +70,8 @@ public class ManageUsersBooks extends Tab {
         tabUserBooks.getChildren().addAll(
                 sceneTitle,
                 grid,
-                tableUserBooks,
-                usunSelectedLent
+                tableUserBooks
+                //usunSelectedLent
         );
         this.setContent(tabUserBooks);
 
@@ -93,14 +93,14 @@ public class ManageUsersBooks extends Tab {
                 View.chosenLent = (Wypozyczenie) tableUserBooks.getSelectionModel().getSelectedItem();
                 DataBaseController db = new DataBaseController();
                 db.usunWypozyczenieKS(View.chosenLent);
-                //tableUserBooks.getItems().remove(chosenLent);
+                //tableUserBooks.getItems().remove(View.chosenLent);
                 //tableUserBooks.getSelectionModel().clearSelection();
 //                new AlertBox().informacja("Została usunięta ksiazka: \n"
 //                        + selectedBook.getAutor()
 //                        + " "
 //                        + selectedBook.getTytul());
-//            } else {
-//                new AlertBox().informacja("Zaznacz pozycję na liście do usunięcia z bazy");
+            } else {
+                new AlertBox().informacja("Zaznacz pozycję na liście do usunięcia z bazy");
             }
 
         }
@@ -110,9 +110,9 @@ public class ManageUsersBooks extends Tab {
                 DataBaseController db = new DataBaseController();
                 db.insertWypozyczenieKS(View.chosenUser.getidentyfikator(), View.chosenBook.getBookID());
 
-                View.chosenBook = null;
-                View.chosenUser = null;
-                View.dataUserBooks.clear();
+                //View.chosenBook = null;
+                //View.chosenUser = null;
+                //View.dataUserBooks.clear();
                 wypozyczone();
                 new AlertBox().informacja("Dodano nowe wypożyczenie");
             } else

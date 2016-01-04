@@ -31,8 +31,9 @@ public class UsersBooksTableView extends TableView {
         userBookLastNameCol.setMinWidth(120);
         TableColumn userBookTitleCol = new TableColumn("Tytuł");
         userBookTitleCol.setMinWidth(250);
-        TableColumn userIDWypozyczeniaCol = new TableColumn("Wypożyczeni Nr");
+        TableColumn userIDWypozyczeniaCol = new TableColumn("Numer wypożyczenia");
         TableColumn userBookStatusCol = new TableColumn("Status wypożyczenia"); 
+        userBookStatusCol.setMinWidth(200);
         userIDWypozyczeniaCol.setMinWidth(200);
 
 

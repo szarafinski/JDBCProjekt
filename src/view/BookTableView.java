@@ -24,12 +24,12 @@ public class BookTableView extends TableView {
         this.setEditable(true);
 
         TableColumn bookNameCol = new TableColumn("Tytuł");
-        bookNameCol.setMinWidth(150);
+        bookNameCol.setMinWidth(300);
         bookNameCol.setCellValueFactory(
                 new PropertyValueFactory<>("bookTitle"));
 
         TableColumn bookAuthorCol = new TableColumn("Autor");
-        bookAuthorCol.setMinWidth(150);
+        bookAuthorCol.setMinWidth(200);
         bookAuthorCol.setCellValueFactory(
                 new PropertyValueFactory<>("bookAuthor"));
 
