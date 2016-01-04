@@ -8,6 +8,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Book;
 import model.User;
+import model.Wypozyczenie;
 
 /**
  *
@@ -16,15 +17,22 @@ import model.User;
 public final class View {
 
     static ObservableList dataUserBooks;
+    ObservableList<User> userList;
+    ObservableList<Book> bookList;
     static TabPane tabPane = new TabPane();
 
     static User chosenUser;
     static Book chosenBook;
+    static Wypozyczenie chosenLent;
 
     public View() {
         View.dataUserBooks = FXCollections.observableArrayList();
+        this.userList = FXCollections.observableArrayList();
+        this.bookList = FXCollections.observableArrayList();
+        
         chosenUser = null;
         chosenBook = null;
+        chosenLent = null;
     }
 
     //@Override

@@ -46,13 +46,20 @@ public class BookTableView extends TableView {
         bookYearCol.setMinWidth(100);
         bookYearCol.setCellValueFactory(
                 new PropertyValueFactory<>("bookRokWydania"));
+        
+        TableColumn bookAvailableCol = new TableColumn("Stan");
+        bookAvailableCol.setMinWidth(100);
+        bookAvailableCol.setCellValueFactory(
+        new PropertyValueFactory<>("bookStan")
+        );
 
         this.getColumns().setAll(
                 bookNameCol,
                 bookAuthorCol,
                 wydawnictwoCol,
                 isbnCol,
-                bookYearCol
+                bookYearCol,
+                bookAvailableCol
         );
         
     }

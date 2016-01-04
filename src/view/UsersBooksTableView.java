@@ -32,6 +32,9 @@ public class UsersBooksTableView extends TableView {
         TableColumn userBookTitleCol = new TableColumn("Tytuł");
         userBookTitleCol.setMinWidth(250);
         TableColumn userIDWypozyczeniaCol = new TableColumn("Wypożyczeni Nr");
+        TableColumn userBookStatusCol = new TableColumn("Status wypożyczenia"); 
+        userIDWypozyczeniaCol.setMinWidth(200);
+
 
         userBookNameCol.setCellValueFactory(
                 new PropertyValueFactory<>("imie")
@@ -48,13 +51,18 @@ public class UsersBooksTableView extends TableView {
         userIDWypozyczeniaCol.setCellValueFactory(
                 new PropertyValueFactory<>("id_wypozyczenia")
         );
+                userBookStatusCol.setCellValueFactory(
+                new PropertyValueFactory<>("status")
+        );
+
 
         this.getColumns().addAll(
                 userIDWypozyczeniaCol,
                 userBookNameCol,
                 userBookLastNameCol,
                 userBookAuthorCol,
-                userBookTitleCol
+                userBookTitleCol,
+                userBookStatusCol
         );
         
         this.setItems(View.dataUserBooks);

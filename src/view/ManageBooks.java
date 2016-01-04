@@ -30,7 +30,7 @@ import model.Book;
  */
 public class ManageBooks extends Tab {
     
-    TextField bookNameTextField, wydawnictwoNameTextField, bookIssueDateTextField, bookAuthorTextField, bookISBNTextField;
+    TextField bookNameTextField, wydawnictwoNameTextField, bookIssueDateTextField, bookAuthorTextField, bookISBNTextField, bookAvailableTextField;
     TableView tabelaBook;
     DataBaseController dataBase;
     
@@ -46,18 +46,20 @@ public class ManageBooks extends Tab {
         Label bookIssueDate = new Label("Rok wydania:");
         Label bookAuthor = new Label("Autor:");
         Label bookISBN = new Label("ISBN:");
+        Label bookAvailable = new Label("Stan:");
         
         bookNameTextField = new TextField();
         wydawnictwoNameTextField = new TextField();
         bookIssueDateTextField = new TextField();
         bookAuthorTextField = new TextField();
         bookISBNTextField = new TextField();
+        bookAvailableTextField = new TextField();
         
         Button bookSzukajBtn = new Button("Szukaj");
         Button bookDodajBtn = new Button("Dodaj");
         Button bookUsunBtn = new Button("Usuń");
         Button bookClearBtn = new Button("Wyczyść");
-        Button chooseBookButton = new Button("Wybierz książkę");
+        Button chooseBookButton = new Button("Wybierz książkę do wypozyczenia");
         
         bookSzukajBtn.setOnAction(event -> new ButtonActions().szukaj());
         bookDodajBtn.setOnAction(event -> new ButtonActions().dodaj());
@@ -93,6 +95,8 @@ public class ManageBooks extends Tab {
         siatka.add(wydawnictwoNameTextField, 2, 2);
         siatka.add(bookISBN, 0, 4);
         siatka.add(bookISBNTextField, 0, 5);
+        siatka.add(bookAvailable, 0, 6);
+        siatka.add(bookAvailableTextField,0,7);
         siatka.add(bookIssueDate, 1, 4);
         siatka.add(bookIssueDateTextField, 1, 5);
         siatka.add(poziomePrzyciski, 2, 5);
@@ -111,7 +115,8 @@ public class ManageBooks extends Tab {
                 bookAuthorTextField.getText(),
                 bookISBNTextField.getText(),
                 wydawnictwoNameTextField.getText(),
-                bookIssueDateTextField.getText()
+                bookIssueDateTextField.getText(),
+                bookAvailableTextField.getText()
         );
     }
     
@@ -132,7 +137,8 @@ public class ManageBooks extends Tab {
                     && !bookAuthorTextField.getText().isEmpty()
                     && !bookISBNTextField.getText().isEmpty()
                     && !wydawnictwoNameTextField.getText().isEmpty()
-                    && !bookIssueDateTextField.getText().isEmpty()) {
+                    && !bookIssueDateTextField.getText().isEmpty()
+                    && !bookAvailableTextField.getText().isEmpty()) {
                 tabelaBook.getItems().add(newBook());
                 dataBase.insertKsiazka(newBook());
                 clear();
