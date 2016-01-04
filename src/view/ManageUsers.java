@@ -59,7 +59,7 @@ public class ManageUsers extends Tab {
         Button userClearBtn = new Button("Wyczyść");
         Button userShowBooks = new Button("Książki Czytelnika");
 
-        Button chooseUserButton = new Button("Wybierz Czytelnika");
+        Button chooseUserButton = new Button("Wybierz Czytelnika by wypozyczyć");
 
         userSzukajBtn.setOnAction(event -> new ButtonActions().szukaj());
         userDodajBtn.setOnAction(event -> new ButtonActions().dodaj());

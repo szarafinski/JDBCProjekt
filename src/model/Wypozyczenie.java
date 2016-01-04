@@ -14,23 +14,30 @@ public class Wypozyczenie {
     private final SimpleStringProperty nazwisko;
     private final SimpleStringProperty tytul;
     private final SimpleStringProperty autor;
+    private final SimpleStringProperty status;
 
-    public Wypozyczenie(String imie, String nazwisko, String tytul, String autor) {
+    public Wypozyczenie(String imie, String nazwisko, String tytul, String autor, String status) {
         this.imie = new SimpleStringProperty(imie);
         this.nazwisko = new SimpleStringProperty(nazwisko);
         this.tytul = new SimpleStringProperty(tytul);
         this.autor = new SimpleStringProperty(autor);
         id_wypozyczenia = new SimpleIntegerProperty();
+        this.status = new SimpleStringProperty(status);
     }
 
-    public Wypozyczenie(String imie, String nazwisko, String tytul, String autor, Integer id) {
+    public Wypozyczenie(String imie, String nazwisko, String tytul, String autor, Integer id, String status) {
         this.imie = new SimpleStringProperty(imie);
         this.nazwisko = new SimpleStringProperty(nazwisko);
         this.tytul = new SimpleStringProperty(tytul);
         this.autor = new SimpleStringProperty(autor);
         this.id_wypozyczenia = new SimpleIntegerProperty(id);
+        this.status = new SimpleStringProperty(status);
     }
-
+    
+    public void setStatus(String status) {
+        this.status.set(status);
+    }
+    
     public void setImie(String imie) {
         this.imie.set(imie);
     }
@@ -69,6 +76,10 @@ public class Wypozyczenie {
 
     public Integer getId_wypozyczenia() {
         return id_wypozyczenia.get();
+    }
+    
+    public String getStatus(){
+        return status.get();
     }
 
 }
